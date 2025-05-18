@@ -29,6 +29,10 @@ Veja como o Alfie se parece em ação:
 | :----------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
 | <img src="assets/screenshots/1.png" width="180" height="320" alt="Tela Inicial do Alfie"/> | <img src="assets/screenshots/2.png" width="180" height="320" alt="Tela de configuração da API Key"/> | <img src="assets/screenshots/3.png" width="180" height="320" alt="Tela Home antes de configurar a vaga"/> | <img src="assets/screenshots/4.png" width="180" height="320" alt="Tela Home com descrição da vaga preenchida"/> | <img src="assets/screenshots/5.png" width="180" height="320" alt="Tela de Simulação de Entrevista"/> | <img src="assets/screenshots/6.png" width="180" height="320" alt="Tela de Feedback da Entrevista"/> | <img src="assets/screenshots/7.png" width="180" height="320" alt="Tela de Quiz Técnico"/> |
 
+Para preencher a descrição da vaga basta detalhar a vaga para qual voce quer ser treinado ou simplesmente copiar os requisitos da vaga e colar no campo da Home.
+
+<img src="assets/screenshots/requisitos.png"  height="320" alt="Tela de Quiz Técnico"/>
+
 ## 💡 Funcionalidades Principais
 
 - 🎯 **Simulação de Entrevista Realista**: Pratique com perguntas personalizadas com base na vaga e receba feedback construtivo sobre suas respostas.
@@ -118,11 +122,11 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE.md](LICENSE.md) p
 
 Ficarei feliz em conectar!
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/seu-linkedin)
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/seu-github)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/pedroleda)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/pedrinholeda)
 
 ---
 
 <div align="center">
-Feito com ❤️ por Pedro Leda
+Feito com ☕️ por Pedro Leda
 </div>
