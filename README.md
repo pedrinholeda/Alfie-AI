@@ -1,8 +1,14 @@
-# Alfie - Seu Assistente de Entrevistas Alimentado por IA 🤖
+# Alfie - Seu Assistente Inteligente para Entrevistas 🚀🤖
 
 <div align="center">
 
 ![Alfie Logo](assets/icon.png)
+
+</div>
+
+<p align="center">Prepare-se para sua próxima entrevista de tecnologia com simulações realistas e feedback alimentado por IA.</p>
+
+<div align="center">
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 [![React Native](https://img.shields.io/badge/React_Native-20232A?style=flat&logo=react&logoColor=61DAFB)](https://reactnative.dev/)
@@ -11,96 +17,106 @@
 
 </div>
 
-## 📱 Sobre o Alfie
+## ✨ Sobre o Alfie
 
-O Alfie é seu companheiro inteligente para praticar entrevistas de emprego na área de tecnologia. Utilizando a poderosa API do Google Gemini, o app oferece uma experiência personalizada de preparação para entrevistas técnicas e comportamentais.
+O Alfie é o seu companheiro ideal para dominar o processo de entrevistas na área de tecnologia. Desenvolvido com **React Native** e impulsionado pela **poderosa API do Google Gemini**, ele oferece uma plataforma interativa para você praticar e aprimorar suas habilidades de entrevista, cobrindo tanto aspectos técnicos quanto comportamentais. Diga adeus à ansiedade e olá à confiança!
 
-## 📸 Screenshots
+## 📸 Telas do Aplicativo
 
-<div align="center">
-<table>
-  <tr>
-    <td><img src="assets/screenshots/home.png" width="200" alt="Tela Inicial"/></td>
-    <td><img src="assets/screenshots/interview.png" width="200" alt="Simulação de Entrevista"/></td>
-    <td><img src="assets/screenshots/quiz.png" width="200" alt="Quiz Técnico"/></td>
-  </tr>
-  <tr>
-    <td align="center"><strong>Tela Inicial</strong></td>
-    <td align="center"><strong>Simulação de Entrevista</strong></td>
-    <td align="center"><strong>Quiz Técnico</strong></td>
-  </tr>
-</table>
-</div>
+Veja como o Alfie se parece em ação:
 
-## ✨ Destaques
+|                                        Tela Inicial                                        |                                       Configuração da API Key                                        |                                               Home (Vazio)                                                |                                                Home (Preenchida)                                                |                                       Simulação de Entrevista                                        |                                       Feedback da Entrevista                                        |                                       Quiz Técnico                                        |
+| :----------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
+| <img src="assets/screenshots/1.png" width="180" height="320" alt="Tela Inicial do Alfie"/> | <img src="assets/screenshots/2.png" width="180" height="320" alt="Tela de configuração da API Key"/> | <img src="assets/screenshots/3.png" width="180" height="320" alt="Tela Home antes de configurar a vaga"/> | <img src="assets/screenshots/4.png" width="180" height="320" alt="Tela Home com descrição da vaga preenchida"/> | <img src="assets/screenshots/5.png" width="180" height="320" alt="Tela de Simulação de Entrevista"/> | <img src="assets/screenshots/6.png" width="180" height="320" alt="Tela de Feedback da Entrevista"/> | <img src="assets/screenshots/7.png" width="180" height="320" alt="Tela de Quiz Técnico"/> |
 
-- 🎯 **Simulação de Entrevista**: Pratique com perguntas abertas e receba feedback detalhado
-- 📝 **Quiz Técnico**: Teste seus conhecimentos com questões de múltipla escolha
-- 🤖 **IA Avançada**: Powered by Google Gemini API
-- 🌙 **Design Moderno**: Interface intuitiva com tema escuro
-- 📊 **Análise Detalhada**: Feedback completo sobre seu desempenho
+## 💡 Funcionalidades Principais
+
+- 🎯 **Simulação de Entrevista Realista**: Pratique com perguntas personalizadas com base na vaga e receba feedback construtivo sobre suas respostas.
+- 📝 **Quiz Técnico Interativo**: Teste e fortaleça seus conhecimentos em diversas áreas técnicas com quizzes de múltipla escolha.
+- 🧠 **IA Avançada com Google Gemini**: Obtenha perguntas e feedback inteligentes e relevantes para sua preparação.
+- 🌙 **Design Moderno e Intuitivo**: Uma interface limpa e agradável, otimizada para tema escuro.
+- 📊 **Análise de Desempenho**: Visualize feedback detalhado após as simulações para identificar pontos fortes e áreas de melhoria.
 
 ## 🚀 Começando
 
+Siga estes passos simples para configurar e rodar o Alfie em seu ambiente local:
+
 ### Pré-requisitos
 
-- Node.js 14+
-- npm ou yarn
-- Expo Go app no seu celular
-- Chave API do Google Gemini
+Certifique-se de ter instalado em sua máquina:
 
-### Instalação em 3 Passos
+- [Node.js](https://nodejs.org/) (versão 14 ou superior)
+- [npm](https://www.npmjs.com/get-npm) ou [yarn](https://yarnpkg.com/)
+- Aplicativo [Expo Go](https://expo.dev/client) instalado no seu celular (Android ou iOS)
+- Uma Chave API do Google Gemini (obtenha uma em [Google AI Studio](https://aistudio.google.com/))
 
-1. **Clone e Instale**
-   ```bash
-   # Clone o repositório
-   git clone https://github.com/seu-usuario/alfie-interview-app.git
-   cd alfie-interview-app
+### Instalação e Execução
 
-   # Instale as dependências
-   npm install
-   ```
+1.  **Clone o repositório e instale as dependências:**
 
-2. **Configure sua API Key**
-   ```bash
-   # Crie o arquivo .env
-   echo "GOOGLE_GEMINI_API_KEY=sua-chave-api-aqui" > .env
-   ```
+    ```bash
+    # Clone o repositório
+    git clone [https://github.com/seu-usuario/alfie-interview-app.git](https://github.com/seu-usuario/alfie-interview-app.git)
+    cd alfie-interview-app
 
-3. **Rode o App**
-   ```bash
-   # Inicie o servidor Expo
-   npx expo start
-   ```
+    # Instale as dependências (usando npm)
+    npm install --legacy-peer-deps
+
+    # Ou usando yarn
+    # yarn install --legacy-peer-deps
+    ```
+
+2.  **Configure sua Chave API:**
+
+    Crie um arquivo chamado `.env` na raiz do projeto e adicione sua chave API:
+
+    ```bash
+    echo "GOOGLE_GEMINI_API_KEY=sua-chave-api-aqui" > .env
+    ```
+
+    _Substitua `sua-chave-api-aqui` pela sua chave API real._
+
+3.  **Inicie o Aplicativo:**
+
+    ```bash
+    # Inicie o servidor de desenvolvimento Expo
+    npx expo start
+    ```
+
+    Este comando iniciará o servidor e exibirá um QR Code no terminal.
 
 ### 📱 Rodando no seu Celular
 
-1. Instale o app Expo Go no seu celular
-2. Escaneie o QR Code que aparece no terminal
-3. Pronto! O app vai carregar no seu dispositivo
+Com o servidor iniciado e o QR Code visível no terminal:
+
+1.  Abra o aplicativo **Expo Go** no seu smartphone.
+2.  Escaneie o QR Code exibido no terminal do seu computador.
+3.  O Expo Go carregará o aplicativo Alfie diretamente no seu dispositivo para teste. Certifique-se de que seu computador e celular estejam na mesma rede Wi-Fi.
 
 ## 🎯 Como Usar
 
-1. **Configure sua API Key** na primeira tela
-2. Escolha entre **Simulação de Entrevista** ou **Quiz Técnico**
-3. Cole a descrição da vaga que deseja praticar
-4. Receba perguntas personalizadas e feedback em tempo real
+1.  Ao abrir o app pela primeira vez, insira sua **Chave API do Google Gemini** na tela solicitada (se não estiver configurada no `.env`).
+2.  Na tela principal (Home), cole a **descrição da vaga** para a qual você está se preparando.
+3.  Escolha entre **"Simulação de Entrevista"** ou **"Quiz Técnico"** para começar sua prática.
+4.  Siga as instruções na tela, responda às perguntas e receba feedback detalhado após a simulação ou veja seus resultados no quiz.
 
-## 🛠️ Tecnologias
+## 🛠️ Tecnologias Utilizadas
 
-- React Native
-- Expo
-- TypeScript
-- Google Gemini API
-- React Navigation
-- Async Storage
-- Styled Components
+- [React Native](https://reactnative.dev/)
+- [Expo](https://expo.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Google Gemini API](https://ai.google.dev/)
+- [React Navigation](https://reactnavigation.org/)
+- [Async Storage](https://react-native-async-storage.github.io/async-storage/)
+- [Styled Components](https://styled-components.com/)
 
 ## 📄 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE.md](LICENSE.md) para mais detalhes.
 
 ## 🤝 Conecte-se Comigo
+
+Ficarei feliz em conectar!
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/seu-linkedin)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/seu-github)
@@ -109,4 +125,4 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE.md](LICENSE.md) p
 
 <div align="center">
 Feito com ❤️ por Pedro Leda
-</div> 
+</div>
