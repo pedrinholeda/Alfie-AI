@@ -25,14 +25,14 @@ O Alfie é o seu companheiro ideal para dominar o processo de entrevistas na ár
 
 Veja como o Alfie se parece em ação:
 
-|                                        Tela Inicial                                        |                                       Configuração da API Key                                        |                                               Home (Vazio)                                                |                                                Home (Preenchida)                                                |                                       Simulação de Entrevista                                        |                                       Feedback da Entrevista                                        |                                       Quiz Técnico                                        |
-| :----------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------: |
-| <img src="assets/screenshots/1.PNG" width="180" height="320" alt="Tela Inicial do Alfie"/> | <img src="assets/screenshots/2.PNG" width="180" height="320" alt="Tela de configuração da API Key"/> | <img src="assets/screenshots/3.PNG" width="180" height="320" alt="Tela Home antes de configurar a vaga"/> | <img src="assets/screenshots/4.PNG" width="180" height="320" alt="Tela Home com descrição da vaga preenchida"/> | <img src="assets/screenshots/5.PNG" width="180" height="320" alt="Tela de Simulação de Entrevista"/> | <img src="assets/screenshots/6.PNG" width="180" height="320" alt="Tela de Feedback da Entrevista"/> | <img src="assets/screenshots/7.PNG" width="180" height="320" alt="Tela de Quiz Técnico"/> |
+|                                 Tela Inicial                                  |                                 Configuração da API Key                                 |                                         Home (Vazio)                                         |                                         Home (Preenchida)                                          |                                 Simulação de Entrevista                                 |                                 Feedback da Entrevista                                 |                                 Quiz Técnico                                 |
+| :---------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------: |
+| <img src="assets/screenshots/1.PNG" width="180" alt="Tela Inicial do Alfie"/> | <img src="assets/screenshots/2.PNG" width="180" alt="Tela de configuração da API Key"/> | <img src="assets/screenshots/3.PNG" width="180" alt="Tela Home antes de configurar a vaga"/> | <img src="assets/screenshots/4.PNG" width="180" alt="Tela Home com descrição da vaga preenchida"/> | <img src="assets/screenshots/5.PNG" width="180" alt="Tela de Simulação de Entrevista"/> | <img src="assets/screenshots/6.PNG" width="180" alt="Tela de Feedback da Entrevista"/> | <img src="assets/screenshots/7.PNG" width="180" alt="Tela de Quiz Técnico"/> |
 
 Para preencher a descrição da vaga basta detalhar a vaga para qual voce quer ser treinado ou simplesmente copiar os requisitos da vaga e colar no campo da Home.
 
 <div align="center">
-<img src="assets/screenshots/requisitos.png" height="320" alt="Exemplo de preenchimento da vaga"/>
+<img src="assets/screenshots/requisitos.png" width="180" alt="Exemplo de preenchimento da vaga"/>
 </div>
 
 ## 💡 Funcionalidades Principais
@@ -62,7 +62,7 @@ Certifique-se de ter instalado em sua máquina:
 
     ```bash
     # Clone o repositório
-    git clone [https://github.com/seu-usuario/alfie-interview-app.git](https://github.com/seu-usuario/alfie-interview-app.git)
+    git clone https://github.com/seu-usuario/alfie-interview-app.git
     cd alfie-interview-app
 
     # Instale as dependências (usando npm)
@@ -89,7 +89,7 @@ Certifique-se de ter instalado em sua máquina:
     npx expo start
     ```
 
-    Este comando iniciará o servidor e exibirá um QR Code no terminal.
+    Este comando iniciará o servidor e exibir\u00E1 um QR Code no terminal.
 
 ### 📱 Rodando no seu Celular
 
@@ -97,14 +97,14 @@ Com o servidor iniciado e o QR Code visível no terminal:
 
 1.  Abra o aplicativo **Expo Go** no seu smartphone.
 2.  Escaneie o QR Code exibido no terminal do seu computador.
-3.  O Expo Go carregará o aplicativo Alfie diretamente no seu dispositivo para teste. Certifique-se de que seu computador e celular estejam na mesma rede Wi-Fi.
+3.  O Expo Go carregar\u00E1 o aplicativo Alfie diretamente no seu dispositivo para teste. Certifique-se de que seu computador e celular estejam na mesma rede Wi-Fi.
 
 ## 🎯 Como Usar
 
 1.  Ao abrir o app pela primeira vez, insira sua **Chave API do Google Gemini** na tela solicitada (se não estiver configurada no `.env`).
-2.  Na tela principal (Home), cole a **descrição da vaga** para a qual você está se preparando.
-3.  Escolha entre **"Simulação de Entrevista"** ou **"Quiz Técnico"** para começar sua prática.
-4.  Siga as instruções na tela, responda às perguntas e receba feedback detalhado após a simulação ou veja seus resultados no quiz.
+2.  Na tela principal (Home), cole a **descrição da vaga** para a qual você est\u00E1 se preparando.
+3.  Escolha entre **"Simula\u00E7\u00E3o de Entrevista"** ou **"Quiz Técnico"** para come\u00E7ar sua pr\u00E1tica.
+4.  Siga as instru\u00E7\u00F5es na tela, responda \u00E0s perguntas e receba feedback detalhado ap\u00F3s a simula\u00E7\u00E3o ou veja seus resultados no quiz.
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -116,15 +116,15 @@ Com o servidor iniciado e o QR Code visível no terminal:
 - [Async Storage](https://react-native-async-storage.github.io/async-storage/)
 - [Styled Components](https://styled-components.com/)
 
-## 📄 Licença
+## 📄 Licen\u00E7a
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE.md](LICENSE.md) para mais detalhes.
+Este projeto est\u00E1 sob a licen\u00E7a MIT. Veja o arquivo [LICENSE.md](LICENSE.md) para mais detalhes.
 
 ## 🤝 Conecte-se Comigo
 
 Ficarei feliz em conectar!
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/pedroleda)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](<[https://www.linkedin.com/in/pedroleda](https://www.linkedin.com/in/pedroleda)>)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/pedrinholeda)
 
 ---
