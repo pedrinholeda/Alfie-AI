@@ -31,7 +31,9 @@ Veja como o Alfie se parece em ação:
 
 Para preencher a descrição da vaga basta detalhar a vaga para qual voce quer ser treinado ou simplesmente copiar os requisitos da vaga e colar no campo da Home.
 
-<img src="assets/screenshots/requisitos.png"  height="320" alt="Tela de Quiz Técnico"/>
+<div align="center">
+<img src="assets/screenshots/requisitos.png" height="320" alt="Exemplo de preenchimento da vaga"/>
+</div>
 
 ## 💡 Funcionalidades Principais
 
