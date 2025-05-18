@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fundo gradiente -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0" y1="0" x2="1024" y2="1024" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" style="stop-color:#1A1A1A"/>
+      <stop offset="100%" style="stop-color:#2A2A2A"/>
+    </linearGradient>
+    <linearGradient id="primaryGradient" x1="512" y1="200" x2="512" y2="824" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" style="stop-color:#7C72FF"/>
+      <stop offset="100%" style="stop-color:#6C63FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fundo com cantos arredondados -->
+  <rect width="1024" height="1024" rx="256" fill="url(#bgGradient)"/>
+
+  <!-- Forma principal do Alfie -->
+  <path d="
+    M 512 200
+    C 350 200 250 350 250 512
+    C 250 674 350 824 512 824
+    C 674 824 774 674 774 512
+    C 774 350 674 200 512 200
+    Z
+  " fill="url(#primaryGradient)"/>
+
+  <!-- Olhos -->
+  <g transform="translate(512 462)">
+    <!-- Olho esquerdo -->
+    <circle cx="-80" cy="-40" r="32" fill="#FFFFFF"/>
+    <circle cx="-80" cy="-40" r="16" fill="#1A1A1A"/>
+    
+    <!-- Olho direito -->
+    <circle cx="80" cy="-40" r="32" fill="#FFFFFF"/>
+    <circle cx="80" cy="-40" r="16" fill="#1A1A1A"/>
+
+    <!-- Sorriso -->
+    <path d="
+      M -100 60
+      C -100 120 100 120 100 60
+      C 50 100 -50 100 -100 60
+      Z
+    " fill="#FFFFFF"/>
+  </g>
+
+  <!-- Detalhes do "headset" -->
+  <path d="
+    M 300 412
+    C 300 312 400 262 512 262
+    C 624 262 724 312 724 412
+  " stroke="#FFFFFF" stroke-width="40" stroke-linecap="round"/>
+
+  <!-- Reflexo -->
+  <path d="
+    M 512 200
+    C 450 200 400 220 360 260
+    C 320 300 300 350 300 412
+    C 380 372 460 352 512 352
+    C 564 352 644 372 724 412
+    C 724 350 704 300 664 260
+    C 624 220 574 200 512 200
+    Z
+  " fill="#FFFFFF" fill-opacity="0.1"/>
+</svg> 

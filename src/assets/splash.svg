@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1242" height="2436" viewBox="0 0 1242 2436" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fundo gradiente -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0" y1="0" x2="1242" y2="2436" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" style="stop-color:#1A1A1A"/>
+      <stop offset="100%" style="stop-color:#2A2A2A"/>
+    </linearGradient>
+    <linearGradient id="primaryGradient" x1="621" y1="918" x2="621" y2="1518" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" style="stop-color:#7C72FF"/>
+      <stop offset="100%" style="stop-color:#6C63FF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fundo -->
+  <rect width="1242" height="2436" fill="url(#bgGradient)"/>
+  
+  <!-- Forma principal do Alfie -->
+  <path d="
+    M 621 918
+    C 459 918 359 1068 359 1218
+    C 359 1368 459 1518 621 1518
+    C 783 1518 883 1368 883 1218
+    C 883 1068 783 918 621 918
+    Z
+  " fill="url(#primaryGradient)"/>
+
+  <!-- Olhos -->
+  <g transform="translate(621 1168)">
+    <!-- Olho esquerdo -->
+    <circle cx="-80" cy="-40" r="32" fill="#FFFFFF"/>
+    <circle cx="-80" cy="-40" r="16" fill="#1A1A1A"/>
+    
+    <!-- Olho direito -->
+    <circle cx="80" cy="-40" r="32" fill="#FFFFFF"/>
+    <circle cx="80" cy="-40" r="16" fill="#1A1A1A"/>
+
+    <!-- Sorriso -->
+    <path d="
+      M -100 60
+      C -100 120 100 120 100 60
+      C 50 100 -50 100 -100 60
+      Z
+    " fill="#FFFFFF"/>
+  </g>
+
+  <!-- Detalhes do "headset" -->
+  <path d="
+    M 409 1118
+    C 409 1018 509 968 621 968
+    C 733 968 833 1018 833 1118
+  " stroke="#FFFFFF" stroke-width="40" stroke-linecap="round"/>
+
+  <!-- Reflexo -->
+  <path d="
+    M 621 918
+    C 559 918 509 938 469 978
+    C 429 1018 409 1068 409 1118
+    C 489 1078 569 1058 621 1058
+    C 673 1058 753 1078 833 1118
+    C 833 1068 813 1018 773 978
+    C 733 938 683 918 621 918
+    Z
+  " fill="#FFFFFF" fill-opacity="0.1"/>
+
+  <!-- Texto "ALFIE INTERVIEW" -->
+  <text x="621" y="1718" 
+    font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', sans-serif" 
+    font-size="72" 
+    font-weight="700"
+    fill="#FFFFFF" 
+    text-anchor="middle"
+    letter-spacing="2">
+    ALFIE INTERVIEW
+  </text>
+</svg> 
