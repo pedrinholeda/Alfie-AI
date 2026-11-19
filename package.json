@@ -11,20 +11,25 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "jest"
+    "test": "jest",
+    "web:serve": "expo start --web --port 8081"
   },
   "dependencies": {
+    "@expo/metro-runtime": "~5.0.5",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-navigation/native": "^7.1.9",
     "@react-navigation/native-stack": "^7.3.13",
-    "axios": "^1.9.0",
     "date-fns": "^4.1.0",
     "expo": "~53.0.9",
+    "expo-clipboard": "~7.1.5",
+    "expo-constants": "~17.1.8",
+    "expo-secure-store": "~14.2.4",
     "react": "19.0.0",
+    "react-dom": "19.0.0",
     "react-native": "0.79.6",
-    "react-native-dotenv": "^3.4.11",
     "react-native-safe-area-context": "5.4.0",
-    "react-native-screens": "~4.11.1"
+    "react-native-screens": "~4.11.1",
+    "react-native-web": "^0.20.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

@@ -8,15 +8,6 @@ module.exports = defineConfig([
   expoConfig,
   prettierConfig,
   {
-    // '@env' é gerado pelo babel (react-native-dotenv) e não existe em disco.
-    settings: { 'import/core-modules': ['@env'] },
-    rules: {
-      // Carregar dados do AsyncStorage ao montar chama setState depois de um await: é o
-      // caso que esta regra existe para evitar em código síncrono, não neste.
-      'react-hooks/set-state-in-effect': 'off',
-    },
-  },
-  {
     ignores: ['dist/*', 'web-build/*', '.expo/*', 'coverage/*', 'node_modules/*'],
   },
 ]);
