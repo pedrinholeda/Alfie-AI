@@ -1,356 +1,376 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
-import { averageScore, quizPercentage } from '../lib/scoring';
-import { theme } from '../styles/theme';
-import SafeLayout from '../components/SafeLayout';
+/** Resultado de uma sessão, vindo do fim da prática ou do histórico. */
+import React, { useState } from 'react';
+import { Pressable, Share, Text, View } from 'react-native';
+
 import AlfieAvatar from '../components/AlfieAvatar';
-import type { InterviewQuestion, JobRequirements } from '../services/gemini';
+import { PreparingCard } from '../components/PreparingCard';
+import { formatSessionDate, scoreLabel } from '../components/SessionRow';
+import {
+  AppHeader,
+  Button,
+  Card,
+  EmptyState,
+  ErrorBox,
+  Icon,
+  IconButton,
+  Pill,
+  ScoreBadge,
+  Screen,
+  SectionTitle,
+} from '../components/ui';
+import { usePracticeStarter } from '../hooks/usePracticeStarter';
+import { confirm } from '../lib/confirm';
+import { sessionScore10 } from '../lib/history';
+import { buildShareText } from '../lib/share';
+import { useHistory } from '../state/history';
+import { scoreColors, useTheme } from '../theme';
+import type { InterviewSession, QuizSession } from '../types/domain';
+import type { ScreenProps } from '../types/navigation';
+import { FeedbackBlock, difficultyLabel } from './Interview';
 
-const { width } = Dimensions.get('window');
-
-interface ResultsScreenProps {
-  navigation: any;
-  route: {
-    params: {
-      // Para resultados do Quiz
-      score?: number;
-      total?: number;
-      // Para resultados da Entrevista
-      questions?: InterviewQuestion[];
-      answers?: {
-        question: string;
-        answer: string;
-        feedback: any;
-      }[];
-      requirements?: JobRequirements;
-    };
-  };
+function verdict(score10: number): string {
+  if (score10 >= 8.5) return 'Excelente! Você está pronto para essa vaga.';
+  if (score10 >= 7) return 'Muito bom. Alguns ajustes e você chega lá.';
+  if (score10 >= 5) return 'Bom começo. Vale reforçar os pontos abaixo.';
+  return 'Ainda dá para evoluir bastante. Use o plano abaixo e tente de novo.';
 }
 
-const ResultsScreen: React.FC<ResultsScreenProps> = ({ navigation, route }) => {
-  const { score, total, questions, answers } = route.params;
+export default function ResultsScreen({ navigation, route }: ScreenProps<'Results'>) {
+  const theme = useTheme();
+  const history = useHistory();
+  const starter = usePracticeStarter();
+  const session = history.sessions.find((s) => s.id === route.params.sessionId);
 
-  const isQuizResult = typeof score !== 'undefined' && typeof total !== 'undefined';
+  const goHome = () => (route.params.fresh ? navigation.popToTop() : navigation.goBack());
 
-  const calculateInterviewScore = () => (answers ? averageScore(answers) : 0);
-
-  const aggregateFeedback = () => {
-    if (!answers) return null;
-
-    const allStrengths = new Set<string>();
-    const allWeaknesses = new Set<string>();
-    const allSuggestions = new Set<string>();
-    let overallFeedback = '';
-
-    answers.forEach((answer) => {
-      if (answer.feedback) {
-        answer.feedback.strengths.forEach((s: string) => allStrengths.add(s));
-        answer.feedback.weaknesses.forEach((w: string) => allWeaknesses.add(w));
-        answer.feedback.suggestions.forEach((s: string) => allSuggestions.add(s));
-      }
-    });
-
-    // Análise técnica vs comportamental
-    const technicalAnswers = answers.filter(
-      (a) => questions?.find((q) => q.question === a.question)?.type === 'technical',
-    );
-    const behavioralAnswers = answers.filter(
-      (a) => questions?.find((q) => q.question === a.question)?.type === 'behavioral',
-    );
-
-    const technicalScore =
-      technicalAnswers.reduce((acc, curr) => acc + (curr.feedback?.score || 0), 0) /
-      technicalAnswers.length;
-    const behavioralScore =
-      behavioralAnswers.reduce((acc, curr) => acc + (curr.feedback?.score || 0), 0) /
-      behavioralAnswers.length;
-
-    overallFeedback = `Seu desempenho foi ${technicalScore > behavioralScore ? 'melhor em questões técnicas' : 'melhor em questões comportamentais'}. `;
-    overallFeedback +=
-      technicalScore > 7
-        ? 'Você demonstrou excelente conhecimento técnico. '
-        : technicalScore > 5
-          ? 'Seu conhecimento técnico está adequado, mas pode melhorar. '
-          : 'Você precisa fortalecer seus conhecimentos técnicos. ';
-
-    overallFeedback +=
-      behavioralScore > 7
-        ? 'Suas habilidades comportamentais são excelentes. '
-        : behavioralScore > 5
-          ? 'Suas habilidades comportamentais são boas, mas há espaço para desenvolvimento. '
-          : 'Você precisa desenvolver melhor suas habilidades comportamentais. ';
-
-    return {
-      strengths: Array.from(allStrengths),
-      weaknesses: Array.from(allWeaknesses),
-      suggestions: Array.from(allSuggestions),
-      overallFeedback,
-    };
-  };
-
-  const getAlfieExpression = () => {
-    if (isQuizResult) {
-      const percentage = quizPercentage(score || 0, total || 0);
-      if (percentage >= 70) return 'excited';
-      if (percentage >= 50) return 'neutral';
-      return 'thinking';
-    } else {
-      const finalScore = calculateInterviewScore();
-      if (finalScore >= 7) return 'excited';
-      if (finalScore >= 5) return 'neutral';
-      return 'thinking';
-    }
-  };
-
-  const renderQuizResults = () => (
-    <View style={styles.resultsContainer}>
-      <Text style={styles.scoreTitle}>Resultado do Quiz</Text>
-      <Text
-        style={[
-          styles.scoreValue,
-          {
-            color:
-              (score || 0) >= (total || 0) * 0.7
-                ? theme.colors.success
-                : (score || 0) >= (total || 0) * 0.5
-                  ? theme.colors.warning
-                  : theme.colors.error,
-          },
-        ]}
-      >
-        {quizPercentage(score || 0, total || 0).toFixed(1)}%
-      </Text>
-      <Text style={styles.scoreSubtitle}>
-        {score || 0} de {total || 0} questões corretas
-      </Text>
-    </View>
-  );
-
-  const renderInterviewResults = () => {
-    const finalScore = calculateInterviewScore();
-    const feedback = aggregateFeedback();
-
-    if (!feedback || !answers) return null;
-
+  if (!session) {
     return (
-      <ScrollView style={styles.content}>
-        <View style={styles.resultsContainer}>
-          <Text style={styles.scoreTitle}>Resultado da Entrevista</Text>
-
-          <View style={styles.scoreContainer}>
-            <Text style={styles.scoreLabel}>Pontuação Final</Text>
-            <Text
-              style={[
-                styles.scoreValue,
-                {
-                  color:
-                    finalScore >= 7
-                      ? theme.colors.success
-                      : finalScore >= 5
-                        ? theme.colors.warning
-                        : theme.colors.error,
-                },
-              ]}
-            >
-              {finalScore.toFixed(1)}
-            </Text>
-          </View>
-
-          <View style={styles.feedbackSection}>
-            <Text style={styles.sectionTitle}>Análise Geral</Text>
-            <Text style={styles.feedbackText}>{feedback.overallFeedback}</Text>
-          </View>
-
-          <View style={styles.feedbackSection}>
-            <Text style={styles.sectionTitle}>Pontos Fortes</Text>
-            {feedback.strengths.map((strength, index) => (
-              <Text key={index} style={styles.bulletPoint}>
-                • {strength}
-              </Text>
-            ))}
-          </View>
-
-          <View style={styles.feedbackSection}>
-            <Text style={styles.sectionTitle}>Pontos a Desenvolver</Text>
-            {feedback.weaknesses.map((weakness, index) => (
-              <Text key={index} style={styles.bulletPoint}>
-                • {weakness}
-              </Text>
-            ))}
-          </View>
-
-          <View style={styles.feedbackSection}>
-            <Text style={styles.sectionTitle}>Plano de Ação</Text>
-            {feedback.suggestions.map((suggestion, index) => (
-              <View key={index} style={styles.actionItem}>
-                <Text style={styles.actionNumber}>{index + 1}</Text>
-                <Text style={styles.actionText}>{suggestion}</Text>
-              </View>
-            ))}
-          </View>
-
-          <View style={styles.feedbackSection}>
-            <Text style={styles.sectionTitle}>Respostas</Text>
-            {answers.map((answer, index) => (
-              <View key={index} style={styles.answerCard}>
-                <Text style={styles.questionText}>
-                  {index + 1}. {answer.question}
-                </Text>
-                <Text style={styles.answerText}>{answer.answer}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-      </ScrollView>
+      <Screen header={<AppHeader title="Resultado" onBack={goHome} />}>
+        <EmptyState
+          icon="file-question-outline"
+          title="Sessão não encontrada"
+          message="Ela pode ter sido apagada do histórico."
+          action={<Button title="Voltar ao início" onPress={() => navigation.popToTop()} />}
+        />
+      </Screen>
     );
+  }
+
+  const score10 = sessionScore10(session);
+  const tone = scoreColors(theme, score10);
+
+  const remove = async () => {
+    const ok = await confirm({
+      title: 'Apagar esta sessão?',
+      message: 'Ela sai do histórico e não dá para desfazer.',
+      confirmLabel: 'Apagar',
+      destructive: true,
+    });
+    if (!ok) return;
+    await history.removeSession(session.id);
+    goHome();
   };
+
+  const canRetry = session.requirements.requirements.length > 0 || session.jobText.length > 0;
 
   return (
-    <SafeLayout>
-      <View style={styles.container}>
-        <View style={styles.avatarContainer}>
-          <AlfieAvatar expression={getAlfieExpression()} style={styles.avatar} />
+    <Screen
+      header={
+        <AppHeader
+          title={session.type === 'quiz' ? 'Resultado do quiz' : 'Resultado da entrevista'}
+          onBack={goHome}
+          right={
+            <View style={{ flexDirection: 'row' }}>
+              <IconButton
+                icon="share-variant-outline"
+                label="Compartilhar"
+                onPress={() => void Share.share({ message: buildShareText(session) })}
+              />
+              <IconButton
+                icon="trash-can-outline"
+                label="Apagar sessão"
+                onPress={remove}
+                color={theme.colors.danger}
+              />
+            </View>
+          }
+        />
+      }
+      footer={
+        starter.busy ? null : (
+          <View style={{ flexDirection: 'row', gap: theme.spacing.md }}>
+            <Button
+              title="Início"
+              variant="secondary"
+              onPress={() => navigation.popToTop()}
+              style={{ flex: 1 }}
+            />
+            {canRetry ? (
+              <Button
+                title="Praticar de novo"
+                icon="refresh"
+                onPress={() =>
+                  void starter.start(
+                    session.type,
+                    session.jobText,
+                    session.requirements.requirements.length > 0 ? session.requirements : undefined,
+                  )
+                }
+                style={{ flex: 2 }}
+              />
+            ) : null}
+          </View>
+        )
+      }
+    >
+      <View style={{ alignItems: 'center', gap: theme.spacing.md }}>
+        <AlfieAvatar
+          size={80}
+          expression={score10 >= 7 ? 'excited' : score10 >= 5 ? 'happy' : 'thinking'}
+        />
+        <Text style={{ ...theme.type.caption, color: theme.colors.textMuted, textAlign: 'center' }}>
+          {session.requirements.role} · {formatSessionDate(session.date)}
+        </Text>
+        <View
+          style={{
+            backgroundColor: tone.bg,
+            borderRadius: theme.radius.xl,
+            paddingHorizontal: theme.spacing.xxl,
+            paddingVertical: theme.spacing.lg,
+            alignItems: 'center',
+          }}
+        >
+          <Text style={{ fontSize: 48, fontWeight: '800', color: tone.fg }}>
+            {scoreLabel(session)}
+          </Text>
+          <Text style={{ ...theme.type.label, color: tone.fg }}>
+            {session.type === 'quiz'
+              ? `${session.answers.filter((a) => a.selected === a.question.correctAnswer).length} de ${session.answers.length} corretas`
+              : 'nota de 0 a 10'}
+          </Text>
         </View>
-
-        {isQuizResult ? renderQuizResults() : renderInterviewResults()}
-
-        <TouchableOpacity style={styles.button} onPress={() => navigation.replace('Home')}>
-          <Text style={styles.buttonText}>Voltar ao Início</Text>
-        </TouchableOpacity>
+        <Text style={{ ...theme.type.heading, color: theme.colors.text, textAlign: 'center' }}>
+          {verdict(score10)}
+        </Text>
       </View>
-    </SafeLayout>
+
+      {starter.busy ? (
+        <View style={{ marginTop: theme.spacing.xl }}>
+          <PreparingCard step={starter.step} onCancel={starter.cancel} />
+        </View>
+      ) : starter.error ? (
+        <View style={{ marginTop: theme.spacing.xl }}>
+          <ErrorBox message={starter.error} />
+        </View>
+      ) : null}
+
+      {session.type === 'interview' ? (
+        <InterviewDetails session={session} />
+      ) : (
+        <QuizDetails session={session} />
+      )}
+    </Screen>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  avatarContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  avatar: {
-    width: width * 0.3,
-    height: width * 0.3,
-  },
-  content: {
-    flex: 1,
-  },
-  resultsContainer: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: 10,
-    padding: 20,
-    marginBottom: 20,
-  },
-  scoreTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: theme.colors.text,
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  scoreContainer: {
-    alignItems: 'center',
-    marginVertical: 20,
-    paddingVertical: 20,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  scoreLabel: {
-    fontSize: 16,
-    color: theme.colors.text + 'CC',
-    marginBottom: 10,
-  },
-  scoreValue: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  scoreSubtitle: {
-    fontSize: 16,
-    color: theme.colors.text,
-    textAlign: 'center',
-    marginTop: 5,
-  },
-  feedbackSection: {
-    marginBottom: 25,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: theme.colors.primary,
-    marginBottom: 15,
-  },
-  feedbackText: {
-    fontSize: 16,
-    color: theme.colors.text,
-    lineHeight: 24,
-  },
-  bulletPoint: {
-    fontSize: 16,
-    color: theme.colors.text,
-    lineHeight: 24,
-    marginBottom: 8,
-    paddingLeft: 15,
-  },
-  actionItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 15,
-    paddingLeft: 15,
-  },
-  actionNumber: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: theme.colors.primary,
-    color: theme.colors.background,
-    textAlign: 'center',
-    lineHeight: 24,
-    marginRight: 10,
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  actionText: {
-    flex: 1,
-    fontSize: 16,
-    color: theme.colors.text,
-    lineHeight: 24,
-  },
-  answerCard: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 15,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  questionText: {
-    fontSize: 16,
-    color: theme.colors.text,
-    marginBottom: 10,
-    fontWeight: 'bold',
-  },
-  answerText: {
-    fontSize: 14,
-    color: theme.colors.text,
-    lineHeight: 20,
-  },
-  button: {
-    backgroundColor: theme.colors.primary,
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  buttonText: {
-    color: theme.colors.background,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});
+function InterviewDetails({ session }: { session: InterviewSession }) {
+  const theme = useTheme();
+  const { analysis } = session;
+  return (
+    <>
+      {analysis ? (
+        <>
+          <SectionTitle>Análise do Alfie</SectionTitle>
+          <Card style={{ gap: theme.spacing.lg }}>
+            <Text style={{ ...theme.type.body, color: theme.colors.text }}>
+              {analysis.analysis}
+            </Text>
+            <FeedbackBlock title="Pontos fortes" items={analysis.strengths} tone="good" />
+            <FeedbackBlock title="Pontos a desenvolver" items={analysis.weaknesses} tone="bad" />
+          </Card>
+          {analysis.improvements.length > 0 ? (
+            <>
+              <SectionTitle>Plano de estudo</SectionTitle>
+              <Card style={{ gap: theme.spacing.md }}>
+                {analysis.improvements.map((item, i) => (
+                  <View key={item} style={{ flexDirection: 'row', gap: theme.spacing.md }}>
+                    <View
+                      style={{
+                        width: 26,
+                        height: 26,
+                        borderRadius: 13,
+                        backgroundColor: theme.colors.primarySoft,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Text
+                        style={{
+                          ...theme.type.caption,
+                          fontWeight: '700',
+                          color: theme.colors.primary,
+                        }}
+                      >
+                        {i + 1}
+                      </Text>
+                    </View>
+                    <Text style={{ ...theme.type.body, color: theme.colors.text, flex: 1 }}>
+                      {item}
+                    </Text>
+                  </View>
+                ))}
+              </Card>
+            </>
+          ) : null}
+        </>
+      ) : null}
 
-export default ResultsScreen;
+      <SectionTitle>Pergunta a pergunta</SectionTitle>
+      <View style={{ gap: theme.spacing.md }}>
+        {session.answers.map((a, i) => (
+          <AnswerCard key={`${i}-${a.question.question}`} index={i} entry={a} />
+        ))}
+      </View>
+    </>
+  );
+}
+
+function AnswerCard({
+  index,
+  entry,
+}: {
+  index: number;
+  entry: InterviewSession['answers'][number];
+}) {
+  const theme = useTheme();
+  const [open, setOpen] = useState(false);
+  const { feedback } = entry;
+  return (
+    <Card style={{ gap: theme.spacing.md }}>
+      <Pressable
+        onPress={() => setOpen((v) => !v)}
+        accessibilityRole="button"
+        accessibilityState={{ expanded: open }}
+        style={{ flexDirection: 'row', gap: theme.spacing.md, alignItems: 'center' }}
+      >
+        {feedback ? (
+          <ScoreBadge score={feedback.score} size={40} />
+        ) : (
+          <View
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 20,
+              backgroundColor: theme.colors.surfaceAlt,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Icon name="skip-next" size={18} color={theme.colors.textMuted} />
+          </View>
+        )}
+        <Text
+          style={{ ...theme.type.label, color: theme.colors.text, flex: 1 }}
+          numberOfLines={open ? undefined : 2}
+        >
+          {index + 1}. {entry.question.question}
+        </Text>
+        <Icon name={open ? 'chevron-up' : 'chevron-down'} color={theme.colors.textSubtle} />
+      </Pressable>
+      {open ? (
+        <View style={{ gap: theme.spacing.md }}>
+          <View style={{ flexDirection: 'row', gap: theme.spacing.sm }}>
+            <Pill
+              label={entry.question.type === 'technical' ? 'Técnica' : 'Comportamental'}
+              tone="primary"
+            />
+            <Pill label={difficultyLabel[entry.question.difficulty]} />
+          </View>
+          {feedback ? (
+            <>
+              <Text style={{ ...theme.type.caption, color: theme.colors.textMuted }}>
+                Sua resposta
+              </Text>
+              <Text style={{ ...theme.type.body, color: theme.colors.text }}>{entry.answer}</Text>
+              <Text style={{ ...theme.type.body, color: theme.colors.text }}>
+                {feedback.feedback}
+              </Text>
+              <FeedbackBlock title="Como melhorar" items={feedback.suggestions} tone="tip" />
+            </>
+          ) : (
+            <Text style={{ ...theme.type.body, color: theme.colors.textMuted }}>
+              Pergunta pulada.
+            </Text>
+          )}
+          {entry.question.expectedTopics.length > 0 ? (
+            <Text style={{ ...theme.type.caption, color: theme.colors.textMuted }}>
+              Uma boa resposta cobre: {entry.question.expectedTopics.join(', ')}.
+            </Text>
+          ) : null}
+        </View>
+      ) : null}
+    </Card>
+  );
+}
+
+function QuizDetails({ session }: { session: QuizSession }) {
+  const theme = useTheme();
+  if (session.answers.length === 0) {
+    return (
+      <Card style={{ marginTop: theme.spacing.xl }}>
+        <Text style={{ ...theme.type.body, color: theme.colors.textMuted }}>
+          Esta sessão veio da versão anterior do app e não guardou as questões.
+        </Text>
+      </Card>
+    );
+  }
+  const wrong = session.answers.filter((a) => a.selected !== a.question.correctAnswer);
+  const topics = [...new Set(wrong.map((a) => a.question.topic).filter(Boolean))];
+
+  return (
+    <>
+      {topics.length > 0 ? (
+        <>
+          <SectionTitle>Para revisar</SectionTitle>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing.sm }}>
+            {topics.map((t) => (
+              <Pill key={t} label={t} tone="warning" />
+            ))}
+          </View>
+        </>
+      ) : null}
+      <SectionTitle>Questões</SectionTitle>
+      <View style={{ gap: theme.spacing.md }}>
+        {session.answers.map((a, i) => {
+          const right = a.selected === a.question.correctAnswer;
+          return (
+            <Card key={`${i}-${a.question.question}`} style={{ gap: theme.spacing.sm }}>
+              <View style={{ flexDirection: 'row', gap: theme.spacing.sm }}>
+                <Icon
+                  name={right ? 'check-circle' : 'close-circle'}
+                  color={right ? theme.colors.success : theme.colors.danger}
+                />
+                <Text style={{ ...theme.type.label, color: theme.colors.text, flex: 1 }}>
+                  {i + 1}. {a.question.question}
+                </Text>
+              </View>
+              {!right ? (
+                <Text style={{ ...theme.type.caption, color: theme.colors.danger }}>
+                  Sua resposta: {a.question.options[a.selected]}
+                </Text>
+              ) : null}
+              <Text style={{ ...theme.type.caption, color: theme.colors.success }}>
+                Correta: {a.question.options[a.question.correctAnswer]}
+              </Text>
+              {a.question.explanation ? (
+                <Text style={{ ...theme.type.caption, color: theme.colors.textMuted }}>
+                  {a.question.explanation}
+                </Text>
+              ) : null}
+            </Card>
+          );
+        })}
+      </View>
+    </>
+  );
+}
