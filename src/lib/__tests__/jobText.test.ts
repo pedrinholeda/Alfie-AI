@@ -13,9 +13,18 @@ describe('sanitizeJobInfo', () => {
     );
   });
 
-  it('limite conhecido: troca letras acentuadas por espaço', () => {
-    // \w do JavaScript não casa com "ç" nem "ã": a vaga em português chega quebrada à IA.
-    expect(sanitizeJobInfo('Experiência com comunicação')).toBe('Experi ncia com comunica o');
+  it('mantém letras acentuadas', () => {
+    expect(sanitizeJobInfo('Experiência com comunicação e gestão')).toBe(
+      'Experiência com comunicação e gestão',
+    );
+  });
+
+  it('mantém nomes de tecnologia com símbolos', () => {
+    expect(sanitizeJobInfo('C#, C++, Node.js e CI/CD')).toBe('C#, C++, Node.js e CI/CD');
+  });
+
+  it('remove emojis e símbolos soltos', () => {
+    expect(sanitizeJobInfo('🚀 Vaga ★ remota')).toBe('Vaga remota');
   });
 });
 

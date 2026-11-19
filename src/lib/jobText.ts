@@ -1,10 +1,13 @@
 /** Funções puras sobre o texto da vaga que o usuário cola na Home. */
 
-/** Remove URLs e caracteres especiais, mantendo pontuação básica. */
+/**
+ * Remove URLs e símbolos soltos, mantendo letras de qualquer idioma (acentos inclusos),
+ * números, pontuação básica e os caracteres de nomes de tecnologia (C#, C++, Node.js, CI/CD).
+ */
 export function sanitizeJobInfo(jobInfo: string): string {
   const withoutUrls = jobInfo.replace(/https?:\/\/[^\s]+/g, '');
   return withoutUrls
-    .replace(/[^\w\s.,;:()-]/g, ' ')
+    .replace(/[^\p{L}\p{N}\s.,;:()/+#_-]/gu, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
