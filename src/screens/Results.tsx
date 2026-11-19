@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { averageScore, quizPercentage } from '../lib/scoring';
 import { theme } from '../styles/theme';
 import SafeLayout from '../components/SafeLayout';
 import AlfieAvatar from '../components/AlfieAvatar';
@@ -31,11 +32,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ navigation, route }) => {
 
   const isQuizResult = typeof score !== 'undefined' && typeof total !== 'undefined';
 
-  const calculateInterviewScore = () => {
-    if (!answers) return 0;
-    const totalScore = answers.reduce((acc, curr) => acc + (curr.feedback?.score || 0), 0);
-    return totalScore / answers.length;
-  };
+  const calculateInterviewScore = () => (answers ? averageScore(answers) : 0);
 
   const aggregateFeedback = () => {
     if (!answers) return null;
@@ -93,7 +90,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ navigation, route }) => {
 
   const getAlfieExpression = () => {
     if (isQuizResult) {
-      const percentage = ((score || 0) / (total || 1)) * 100;
+      const percentage = quizPercentage(score || 0, total || 0);
       if (percentage >= 70) return 'excited';
       if (percentage >= 50) return 'neutral';
       return 'thinking';
@@ -121,7 +118,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ navigation, route }) => {
           },
         ]}
       >
-        {(((score || 0) / (total || 1)) * 100).toFixed(1)}%
+        {quizPercentage(score || 0, total || 0).toFixed(1)}%
       </Text>
       <Text style={styles.scoreSubtitle}>
         {score || 0} de {total || 0} questões corretas

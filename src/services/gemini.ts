@@ -1,6 +1,8 @@
 import { GOOGLE_GEMINI_API_KEY } from '@env';
 import axios, { isAxiosError } from 'axios';
 
+import { isUrl, sanitizeJobInfo } from '../lib/jobText';
+
 export interface JobRequirements {
   description: string;
   requirements: string[];
@@ -278,19 +280,6 @@ class GeminiService {
     }
   }
 
-  private sanitizeJobInfo(jobInfo: string): string {
-    // Remove URLs mantendo apenas o texto relevante
-    const withoutUrls = jobInfo.replace(/https?:\/\/[^\s]+/g, '');
-
-    // Remove caracteres especiais mantendo pontuação básica
-    const sanitized = withoutUrls
-      .replace(/[^\w\s.,;:()-]/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim();
-
-    return sanitized;
-  }
-
   private isLinkFormat(text: string): boolean {
     return text.toLowerCase().startsWith('http') || text.toLowerCase().startsWith('www.');
   }
@@ -299,7 +288,7 @@ class GeminiService {
     isValid: boolean;
     error?: string;
   }> {
-    const sanitized = this.sanitizeJobInfo(jobInfo);
+    const sanitized = sanitizeJobInfo(jobInfo);
 
     if (sanitized.length < 30) {
       return {
@@ -374,20 +363,11 @@ class GeminiService {
     }
   }
 
-  private isUrl(text: string): boolean {
-    try {
-      new URL(text);
-      return true;
-    } catch {
-      return text.toLowerCase().startsWith('www.') || text.toLowerCase().startsWith('http');
-    }
-  }
-
   async extractRequirements(jobInfo: string): Promise<JobRequirements> {
     try {
       let jobText = jobInfo;
 
-      if (this.isUrl(jobInfo)) {
+      if (isUrl(jobInfo)) {
         try {
           jobText = await this.extractTextFromUrl(jobInfo);
           console.log('Texto extraído com sucesso, tamanho:', jobText.length);
@@ -406,7 +386,7 @@ class GeminiService {
         );
       }
 
-      const sanitizedInfo = this.sanitizeJobInfo(jobText);
+      const sanitizedInfo = sanitizeJobInfo(jobText);
       const prompt = `
         Analise o texto a seguir e extraia os principais requisitos da vaga.
         Retorne um objeto JSON com os campos:
