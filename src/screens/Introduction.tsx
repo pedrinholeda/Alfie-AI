@@ -30,7 +30,8 @@ const slides: Slide[] = [
   {
     id: 1,
     title: 'Bem-vindo ao Alfie! 👋',
-    description: 'Seu assistente pessoal de entrevistas potencializado por IA. Vou te ajudar a se preparar para entrevistas técnicas de forma inteligente e personalizada.',
+    description:
+      'Seu assistente pessoal de entrevistas potencializado por IA. Vou te ajudar a se preparar para entrevistas técnicas de forma inteligente e personalizada.',
     mainIcon: 'robot-happy',
     secondaryIcons: ['star', 'heart', 'star-shooting'],
     color: '#6C63FF',
@@ -39,7 +40,8 @@ const slides: Slide[] = [
   {
     id: 2,
     title: 'Dois Modos de Prática 🎯',
-    description: 'Escolha entre Simulação de Entrevista para praticar com perguntas abertas e feedback detalhado, ou Quiz Técnico para testar seus conhecimentos com questões de múltipla escolha.',
+    description:
+      'Escolha entre Simulação de Entrevista para praticar com perguntas abertas e feedback detalhado, ou Quiz Técnico para testar seus conhecimentos com questões de múltipla escolha.',
     mainIcon: 'school-outline',
     secondaryIcons: ['account-tie', 'help-circle', 'check-circle'],
     color: '#4CAF50',
@@ -48,7 +50,8 @@ const slides: Slide[] = [
   {
     id: 3,
     title: 'Simulação de Entrevista 🗣️',
-    description: 'Pratique com perguntas abertas personalizadas, receba feedback detalhado sobre suas respostas e dicas para melhorar suas habilidades de comunicação.',
+    description:
+      'Pratique com perguntas abertas personalizadas, receba feedback detalhado sobre suas respostas e dicas para melhorar suas habilidades de comunicação.',
     mainIcon: 'account-tie',
     secondaryIcons: ['message-text', 'thumb-up', 'lightbulb-on'],
     color: '#2196F3',
@@ -57,7 +60,8 @@ const slides: Slide[] = [
   {
     id: 4,
     title: 'Quiz Técnico 📝',
-    description: 'Teste seus conhecimentos técnicos com perguntas de múltipla escolha, receba explicações detalhadas e acompanhe seu progresso com pontuações e análises.',
+    description:
+      'Teste seus conhecimentos técnicos com perguntas de múltipla escolha, receba explicações detalhadas e acompanhe seu progresso com pontuações e análises.',
     mainIcon: 'help-circle',
     secondaryIcons: ['check-circle', 'brain', 'trophy'],
     color: '#FFC107',
@@ -66,7 +70,8 @@ const slides: Slide[] = [
   {
     id: 5,
     title: 'Feedback Inteligente ⚡',
-    description: 'Receba análises detalhadas do seu desempenho, com pontuação, pontos fortes, sugestões de melhoria e dicas práticas para cada pergunta.',
+    description:
+      'Receba análises detalhadas do seu desempenho, com pontuação, pontos fortes, sugestões de melhoria e dicas práticas para cada pergunta.',
     mainIcon: 'lightning-bolt',
     secondaryIcons: ['chart-line', 'thumb-up', 'message-text'],
     color: '#9C27B0',
@@ -75,7 +80,8 @@ const slides: Slide[] = [
   {
     id: 6,
     title: 'Pronto para Começar? 🚀',
-    description: 'Vamos juntos transformar suas entrevistas em oportunidades de sucesso! Configure seu perfil e comece a praticar agora mesmo.',
+    description:
+      'Vamos juntos transformar suas entrevistas em oportunidades de sucesso! Configure seu perfil e comece a praticar agora mesmo.',
     mainIcon: 'rocket',
     secondaryIcons: ['check-circle', 'account', 'arrow-right-circle'],
     color: '#E91E63',
@@ -105,7 +111,7 @@ const IntroductionScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   };
 
   const hideToast = () => {
-    setToast(prev => ({ ...prev, visible: false }));
+    setToast((prev) => ({ ...prev, visible: false }));
   };
 
   const handleNext = () => {
@@ -114,7 +120,7 @@ const IntroductionScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       setCurrentSlide(nextSlide);
       scrollViewRef.current?.scrollTo({
         x: nextSlide * width,
-        animated: true
+        animated: true,
       });
     } else {
       showToast('Vamos começar sua jornada!', 'success');
@@ -140,18 +146,11 @@ const IntroductionScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
             styles.secondaryIconWrapper,
             {
               backgroundColor: `${color}15`,
-              transform: [
-                { translateX: index * 20 },
-                { translateY: Math.sin(index) * 20 },
-              ],
+              transform: [{ translateX: index * 20 }, { translateY: Math.sin(index) * 20 }],
             },
           ]}
         >
-          <MaterialCommunityIcons
-            name={icon as any}
-            size={24}
-            color={color}
-          />
+          <MaterialCommunityIcons name={icon as any} size={24} color={color} />
         </View>
       ))}
     </View>
@@ -160,11 +159,7 @@ const IntroductionScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const renderSlide = (slide: Slide) => (
     <View key={slide.id} style={styles.slide}>
       <View style={styles.avatarContainer}>
-        <AlfieAvatar
-          size={width * 0.4}
-          expression={slide.alfieExpression}
-          style={styles.avatar}
-        />
+        <AlfieAvatar size={width * 0.4} expression={slide.alfieExpression} style={styles.avatar} />
         {renderSecondaryIcons(slide.secondaryIcons, slide.color)}
       </View>
       <View style={styles.textContainer}>
@@ -189,9 +184,7 @@ const IntroductionScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         onMomentumScrollEnd={(event) => {
-          const slideIndex = Math.round(
-            event.nativeEvent.contentOffset.x / width
-          );
+          const slideIndex = Math.round(event.nativeEvent.contentOffset.x / width);
           setCurrentSlide(slideIndex);
         }}
         scrollEventThrottle={16}
@@ -204,35 +197,21 @@ const IntroductionScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           {slides.map((_, index) => (
             <View
               key={index}
-              style={[
-                styles.paginationDot,
-                index === currentSlide && styles.paginationDotActive,
-              ]}
+              style={[styles.paginationDot, index === currentSlide && styles.paginationDotActive]}
             />
           ))}
         </View>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.skipButton}
-            onPress={handleSkip}
-          >
+          <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
             <Text style={styles.skipButtonText}>Pular</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleNext}
-          >
+          <TouchableOpacity style={styles.button} onPress={handleNext}>
             <Text style={styles.buttonText}>
               {currentSlide === slides.length - 1 ? 'Começar' : 'Próximo'}
             </Text>
-            <Ionicons
-              name="arrow-forward"
-              size={20}
-              color="#FFFFFF"
-              style={styles.buttonIcon}
-            />
+            <Ionicons name="arrow-forward" size={20} color="#FFFFFF" style={styles.buttonIcon} />
           </TouchableOpacity>
         </View>
       </View>
@@ -345,4 +324,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default IntroductionScreen; 
+export default IntroductionScreen;

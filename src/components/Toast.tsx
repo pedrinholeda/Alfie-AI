@@ -94,12 +94,7 @@ class Toast extends React.Component<ToastProps, ToastState> {
     }[this.state.type];
 
     return (
-      <Animated.View
-        style={[
-          styles.container,
-          { opacity: this.fadeAnim, backgroundColor },
-        ]}
-      >
+      <Animated.View style={[styles.container, { opacity: this.fadeAnim, backgroundColor }]}>
         <Text style={styles.text}>{this.state.message}</Text>
       </Animated.View>
     );
@@ -126,4 +121,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Toast; 
+export default Toast;

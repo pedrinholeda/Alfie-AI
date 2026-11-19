@@ -9,11 +9,7 @@ interface AlfieAvatarProps {
   expression?: 'happy' | 'thinking' | 'excited' | 'neutral';
 }
 
-const AlfieAvatar: React.FC<AlfieAvatarProps> = ({
-  size = 100,
-  style,
-  expression = 'happy',
-}) => {
+const AlfieAvatar: React.FC<AlfieAvatarProps> = ({ size = 100, style, expression = 'happy' }) => {
   const getExpression = () => {
     switch (expression) {
       case 'thinking':
@@ -58,4 +54,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AlfieAvatar; 
+export default AlfieAvatar;

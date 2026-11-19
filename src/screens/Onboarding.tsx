@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  Platform,
+} from 'react-native';
 import { useApiKey } from '../contexts/ApiKeyContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { theme } from '../styles/theme';
@@ -76,7 +84,7 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
             placeholder="Cole sua API key aqui"
             placeholderTextColor={theme.colors.text + '80'}
             value={apiKeyInput}
-            onChangeText={text => {
+            onChangeText={(text) => {
               setApiKeyInput(text);
               setError('');
             }}
@@ -84,10 +92,7 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
             autoCorrect={false}
           />
           {error ? <Text style={styles.errorText}>{error}</Text> : null}
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleApiKeySubmit}
-          >
+          <TouchableOpacity style={styles.button} onPress={handleApiKeySubmit}>
             <Text style={styles.buttonText}>Continuar</Text>
           </TouchableOpacity>
         </KeyboardAwareView>
@@ -105,15 +110,13 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       >
         <AlfieAvatar expression={error ? 'thinking' : 'happy'} style={styles.avatar} />
         <Text style={styles.title}>Como posso te chamar?</Text>
-        <Text style={styles.subtitle}>
-          Digite seu nome para personalizarmos sua experiência.
-        </Text>
+        <Text style={styles.subtitle}>Digite seu nome para personalizarmos sua experiência.</Text>
         <TextInput
           style={styles.input}
           placeholder="Seu nome"
           placeholderTextColor={theme.colors.text + '80'}
           value={name}
-          onChangeText={text => {
+          onChangeText={(text) => {
             setName(text);
             setError('');
           }}
@@ -121,10 +124,7 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           autoCorrect={false}
         />
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleNameSubmit}
-        >
+        <TouchableOpacity style={styles.button} onPress={handleNameSubmit}>
           <Text style={styles.buttonText}>Começar</Text>
         </TouchableOpacity>
       </KeyboardAwareView>
@@ -185,4 +185,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OnboardingScreen; 
+export default OnboardingScreen;

@@ -105,29 +105,34 @@ class GeminiService {
 
     try {
       // Primeiro, listar os modelos disponíveis
-      const modelsResponse = await fetch(
-        `${this.baseUrl}/models?key=${keyToValidate}`
-      );
+      const modelsResponse = await fetch(`${this.baseUrl}/models?key=${keyToValidate}`);
 
       if (!modelsResponse.ok) {
         const errorData = await modelsResponse.json();
         console.error('Erro ao listar modelos:', modelsResponse.status, modelsResponse.statusText);
         console.error('Detalhes do erro:', errorData);
-        
+
         if (errorData.error?.status === 'PERMISSION_DENIED') {
-          throw new Error('API key sem permissão. Verifique se a API do Gemini está ativada no console do Google Cloud.');
+          throw new Error(
+            'API key sem permissão. Verifique se a API do Gemini está ativada no console do Google Cloud.',
+          );
         }
         return false;
       }
 
       const modelsData = await modelsResponse.json();
       const availableModels = modelsData.models || [];
-      
+
       // Encontrar o modelo correto
       const model = availableModels.find((m: any) => m.name.includes('gemini-2.0-flash'));
       if (!model) {
-        console.error('Modelo gemini-2.0-flash não encontrado. Modelos disponíveis:', availableModels);
-        throw new Error('Modelo gemini-2.0-flash não disponível. Por favor, verifique se você tem acesso ao modelo correto.');
+        console.error(
+          'Modelo gemini-2.0-flash não encontrado. Modelos disponíveis:',
+          availableModels,
+        );
+        throw new Error(
+          'Modelo gemini-2.0-flash não disponível. Por favor, verifique se você tem acesso ao modelo correto.',
+        );
       }
 
       this.model = model.name.split('/').pop();
@@ -143,17 +148,17 @@ class GeminiService {
           body: JSON.stringify({
             contents: [
               {
-                parts: [{ text: "Hello" }]
-              }
+                parts: [{ text: 'Hello' }],
+              },
             ],
             generationConfig: {
               temperature: 0.7,
-              maxOutputTokens: 1
-            }
-          })
-        }
+              maxOutputTokens: 1,
+            },
+          }),
+        },
       );
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Erro ao validar API key:', response.status, response.statusText);
@@ -163,11 +168,13 @@ class GeminiService {
           throw new Error('API key inválida. Por favor, verifique se a chave está correta.');
         }
         if (errorData.error?.status === 'PERMISSION_DENIED') {
-          throw new Error('API key sem permissão. Verifique se a API do Gemini está ativada no console do Google Cloud.');
+          throw new Error(
+            'API key sem permissão. Verifique se a API do Gemini está ativada no console do Google Cloud.',
+          );
         }
         return false;
       }
-      
+
       const data = await response.json();
       return data.candidates && data.candidates.length > 0;
     } catch (error) {
@@ -192,8 +199,8 @@ class GeminiService {
           body: JSON.stringify({
             contents: [
               {
-                parts: [{ text: prompt }]
-              }
+                parts: [{ text: prompt }],
+              },
             ],
             generationConfig: {
               temperature: 0.7,
@@ -201,28 +208,28 @@ class GeminiService {
               topP: 0.95,
               maxOutputTokens: 2048,
               candidateCount: 1,
-              stopSequences: []
+              stopSequences: [],
             },
             safetySettings: [
               {
-                category: "HARM_CATEGORY_HARASSMENT",
-                threshold: "BLOCK_NONE"
+                category: 'HARM_CATEGORY_HARASSMENT',
+                threshold: 'BLOCK_NONE',
               },
               {
-                category: "HARM_CATEGORY_HATE_SPEECH",
-                threshold: "BLOCK_NONE"
+                category: 'HARM_CATEGORY_HATE_SPEECH',
+                threshold: 'BLOCK_NONE',
               },
               {
-                category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                threshold: "BLOCK_NONE"
+                category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+                threshold: 'BLOCK_NONE',
               },
               {
-                category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-                threshold: "BLOCK_NONE"
-              }
-            ]
-          })
-        }
+                category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+                threshold: 'BLOCK_NONE',
+              },
+            ],
+          }),
+        },
       );
 
       if (!response.ok) {
@@ -232,19 +239,23 @@ class GeminiService {
           statusText: response.statusText,
           errorData,
         });
-        
+
         if (errorData.error?.status === 'INVALID_ARGUMENT') {
           throw new Error('API key inválida. Por favor, verifique se a chave está correta.');
         }
         if (errorData.error?.status === 'PERMISSION_DENIED') {
-          throw new Error('API key sem permissão. Verifique se a API do Gemini está ativada no console do Google Cloud.');
+          throw new Error(
+            'API key sem permissão. Verifique se a API do Gemini está ativada no console do Google Cloud.',
+          );
         }
-        
-        throw new Error(`Erro na API: ${response.status} - ${errorData.error?.message || response.statusText}`);
+
+        throw new Error(
+          `Erro na API: ${response.status} - ${errorData.error?.message || response.statusText}`,
+        );
       }
 
       const data = await response.json();
-      
+
       if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
         console.error('Resposta inválida da API:', data);
         throw new Error('Resposta inválida da API');
@@ -254,13 +265,15 @@ class GeminiService {
       return text;
     } catch (error) {
       console.error('Erro ao gerar conteúdo:', error);
-      
+
       if (retryCount < 2) {
-        console.log(`Tentativa ${retryCount + 1} falhou, tentando novamente em ${(retryCount + 1) * 2} segundos...`);
-        await new Promise(resolve => setTimeout(resolve, 2000 * (retryCount + 1)));
+        console.log(
+          `Tentativa ${retryCount + 1} falhou, tentando novamente em ${(retryCount + 1) * 2} segundos...`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, 2000 * (retryCount + 1)));
         return this.generateContent(prompt, retryCount + 1);
       }
-      
+
       throw error;
     }
   }
@@ -268,7 +281,7 @@ class GeminiService {
   private sanitizeJobInfo(jobInfo: string): string {
     // Remove URLs mantendo apenas o texto relevante
     const withoutUrls = jobInfo.replace(/https?:\/\/[^\s]+/g, '');
-    
+
     // Remove caracteres especiais mantendo pontuação básica
     const sanitized = withoutUrls
       .replace(/[^\w\s.,;:()-]/g, ' ')
@@ -287,11 +300,11 @@ class GeminiService {
     error?: string;
   }> {
     const sanitized = this.sanitizeJobInfo(jobInfo);
-    
+
     if (sanitized.length < 30) {
       return {
         isValid: false,
-        error: 'O texto fornecido é muito curto. Por favor, forneça mais detalhes sobre a vaga.'
+        error: 'O texto fornecido é muito curto. Por favor, forneça mais detalhes sobre a vaga.',
       };
     }
 
@@ -300,25 +313,26 @@ class GeminiService {
 
   private async validateResponse(response: any, expectedFields: string[]): Promise<boolean> {
     if (!response || typeof response !== 'object') return false;
-    return expectedFields.every(field => field in response);
+    return expectedFields.every((field) => field in response);
   }
 
   private async extractTextFromUrl(url: string): Promise<string> {
     try {
       const response = await axios.get(url, {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+          Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
           'Accept-Language': 'en-US,en;q=0.5',
-          'Connection': 'keep-alive',
-          'Upgrade-Insecure-Requests': '1'
+          Connection: 'keep-alive',
+          'Upgrade-Insecure-Requests': '1',
         },
         timeout: 10000,
-        maxRedirects: 5
+        maxRedirects: 5,
       });
 
       const html = response.data;
-      
+
       // Remove tags HTML mantendo o texto
       let text = html
         .toString()
@@ -344,15 +358,19 @@ class GeminiService {
       if (isAxiosError(error)) {
         const statusCode = error.response?.status;
         const errorMessage = error.response?.data?.message || error.message;
-        
+
         if (statusCode === 403 || statusCode === 999) {
-          throw new Error('Acesso bloqueado pelo site. Por favor, cole o texto da vaga diretamente.');
+          throw new Error(
+            'Acesso bloqueado pelo site. Por favor, cole o texto da vaga diretamente.',
+          );
         }
-        
+
         throw new Error(`Erro ao acessar a URL (${statusCode}): ${errorMessage}`);
       }
-      
-      throw new Error('Não foi possível extrair o texto da URL. Por favor, cole o texto da vaga diretamente.');
+
+      throw new Error(
+        'Não foi possível extrair o texto da URL. Por favor, cole o texto da vaga diretamente.',
+      );
     }
   }
 
@@ -361,8 +379,7 @@ class GeminiService {
       new URL(text);
       return true;
     } catch {
-      return text.toLowerCase().startsWith('www.') || 
-             text.toLowerCase().startsWith('http');
+      return text.toLowerCase().startsWith('www.') || text.toLowerCase().startsWith('http');
     }
   }
 
@@ -384,7 +401,9 @@ class GeminiService {
       }
 
       if (!jobText || jobText.trim().length < 50) {
-        throw new Error('O texto fornecido é muito curto. Por favor, forneça mais detalhes sobre a vaga.');
+        throw new Error(
+          'O texto fornecido é muito curto. Por favor, forneça mais detalhes sobre a vaga.',
+        );
       }
 
       const sanitizedInfo = this.sanitizeJobInfo(jobText);
@@ -414,14 +433,20 @@ class GeminiService {
 
       try {
         const response = await this.retryWithStructuredPrompt<JobRequirementsResponse>(prompt);
-        
+
         if (typeof response !== 'object' || response === null) {
           throw new Error('Resposta inválida da API: não é um objeto JSON');
         }
 
-        const requiredFields = ['description', 'requirements', 'jobType', 'seniority', 'mainTechnologies'];
-        const missingFields = requiredFields.filter(field => !(field in response));
-        
+        const requiredFields = [
+          'description',
+          'requirements',
+          'jobType',
+          'seniority',
+          'mainTechnologies',
+        ];
+        const missingFields = requiredFields.filter((field) => !(field in response));
+
         if (missingFields.length > 0) {
           throw new Error(`Campos obrigatórios ausentes: ${missingFields.join(', ')}`);
         }
@@ -434,14 +459,19 @@ class GeminiService {
             .slice(0, 10),
           jobType: String(response.jobType || '').trim(),
           seniority: String(response.seniority || '').trim(),
-          mainTechnologies: (Array.isArray(response.mainTechnologies) ? response.mainTechnologies : [])
+          mainTechnologies: (Array.isArray(response.mainTechnologies)
+            ? response.mainTechnologies
+            : []
+          )
             .map((tech: any) => String(tech).trim())
             .filter((tech: string) => tech.length > 0)
-            .slice(0, 5)
+            .slice(0, 5),
         };
 
         if (requirements.requirements.length < 3) {
-          throw new Error('Não foi possível extrair requisitos suficientes da descrição fornecida.');
+          throw new Error(
+            'Não foi possível extrair requisitos suficientes da descrição fornecida.',
+          );
         }
 
         if (requirements.mainTechnologies.length < 1) {
@@ -451,7 +481,9 @@ class GeminiService {
         return requirements;
       } catch (error) {
         console.error('Erro ao processar resposta da API:', error);
-        throw new Error('Não foi possível processar as informações da vaga. Por favor, tente novamente.');
+        throw new Error(
+          'Não foi possível processar as informações da vaga. Por favor, tente novamente.',
+        );
       }
     } catch (error) {
       console.error('Erro ao extrair requisitos:', error);
@@ -476,7 +508,7 @@ class GeminiService {
 
     try {
       const response = await this.generateContent(structuredPrompt);
-      
+
       // Remove formatação markdown e limpa a resposta
       let cleanedResponse = response
         .trim()
@@ -495,7 +527,7 @@ class GeminiService {
 
       // Verifica se há objetos JSON incompletos dentro de arrays
       cleanedResponse = cleanedResponse.replace(/,\s*(?=[\]}])/g, '');
-      
+
       try {
         console.log('Tentando fazer parse do JSON:', cleanedResponse);
         const parsed = JSON.parse(cleanedResponse);
@@ -503,11 +535,12 @@ class GeminiService {
         // Validação adicional para arrays
         if (Array.isArray(parsed)) {
           // Remove itens incompletos ou inválidos
-          const validItems = parsed.filter(item => 
-            item && 
-            typeof item === 'object' && 
-            !Array.isArray(item) &&
-            Object.keys(item).length > 0
+          const validItems = parsed.filter(
+            (item) =>
+              item &&
+              typeof item === 'object' &&
+              !Array.isArray(item) &&
+              Object.keys(item).length > 0,
           );
 
           return validItems as T;
@@ -518,19 +551,19 @@ class GeminiService {
         console.error('Erro ao fazer parse do JSON:', parseError);
         console.error('Resposta original:', response);
         console.error('Resposta limpa:', cleanedResponse);
-        
+
         if (attempt < maxAttempts) {
           console.log(`Tentativa ${attempt} falhou, tentando novamente...`);
-          await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+          await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
           return this.retryWithStructuredPrompt<T>(prompt, attempt + 1);
         }
-        
+
         throw new Error('Formato de resposta inválido');
       }
     } catch (error) {
       if (attempt < maxAttempts) {
         console.log(`Tentativa ${attempt} falhou, tentando novamente...`);
-        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+        await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
         return this.retryWithStructuredPrompt<T>(prompt, attempt + 1);
       }
       throw error;
@@ -619,7 +652,7 @@ class GeminiService {
 
           // Tentar fazer parse do JSON
           const parsed = JSON.parse(cleanedResponse);
-          
+
           if (!parsed.questions || !Array.isArray(parsed.questions)) {
             throw new Error('Formato inválido: questions não é um array');
           }
@@ -636,19 +669,19 @@ class GeminiService {
         try {
           const response = await this.generateContent(technicalPrompt);
           const processed = processResponse(response);
-          
+
           if (this.isValidTechnicalQuestions(processed)) {
             technicalQuestions = processed;
             break;
           }
-          
+
           retryCount++;
           console.log(`Tentativa ${retryCount} para perguntas técnicas falhou`);
-          await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+          await new Promise((resolve) => setTimeout(resolve, 1000 * retryCount));
         } catch (error) {
           retryCount++;
           console.error(`Erro na tentativa ${retryCount} para perguntas técnicas:`, error);
-          await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+          await new Promise((resolve) => setTimeout(resolve, 1000 * retryCount));
         }
       }
 
@@ -660,19 +693,19 @@ class GeminiService {
         try {
           const response = await this.generateContent(behavioralPrompt);
           const processed = processResponse(response);
-          
+
           if (this.isValidBehavioralQuestions(processed)) {
             behavioralQuestions = processed;
             break;
           }
-          
+
           retryCount++;
           console.log(`Tentativa ${retryCount} para perguntas comportamentais falhou`);
-          await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+          await new Promise((resolve) => setTimeout(resolve, 1000 * retryCount));
         } catch (error) {
           retryCount++;
           console.error(`Erro na tentativa ${retryCount} para perguntas comportamentais:`, error);
-          await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+          await new Promise((resolve) => setTimeout(resolve, 1000 * retryCount));
         }
       }
 
@@ -687,24 +720,26 @@ class GeminiService {
 
       // Combinar e processar todas as perguntas
       return [
-        ...technicalQuestions.map(q => ({
+        ...technicalQuestions.map((q) => ({
           question: q.question.trim(),
           context: q.context.trim(),
           type: 'technical' as const,
           difficulty: q.difficulty.toLowerCase() as 'easy' | 'medium' | 'hard',
-          expectedTopics: (q.expectedTopics || []).map(t => t.trim())
+          expectedTopics: (q.expectedTopics || []).map((t) => t.trim()),
         })),
-        ...behavioralQuestions.map(q => ({
+        ...behavioralQuestions.map((q) => ({
           question: q.question.trim(),
           context: q.context.trim(),
           type: 'behavioral' as const,
           difficulty: q.difficulty.toLowerCase() as 'easy' | 'medium' | 'hard',
-          expectedTopics: (q.expectedTopics || []).map(t => t.trim())
-        }))
+          expectedTopics: (q.expectedTopics || []).map((t) => t.trim()),
+        })),
       ];
     } catch (error) {
       console.error('Erro ao gerar perguntas:', error);
-      throw new Error('Não foi possível gerar as perguntas da entrevista. Por favor, tente novamente.');
+      throw new Error(
+        'Não foi possível gerar as perguntas da entrevista. Por favor, tente novamente.',
+      );
     }
   }
 
@@ -714,10 +749,10 @@ class GeminiService {
     }
 
     const validDifficulties = ['easy', 'medium', 'hard'];
-    const isValidQuestion = (q: QuestionResponse) => 
-      q.question && 
-      q.context && 
-      q.type === 'technical' && 
+    const isValidQuestion = (q: QuestionResponse) =>
+      q.question &&
+      q.context &&
+      q.type === 'technical' &&
       validDifficulties.includes(q.difficulty.toLowerCase()) &&
       Array.isArray(q.expectedTopics) &&
       q.expectedTopics.length > 0;
@@ -726,11 +761,11 @@ class GeminiService {
       return false;
     }
 
-    const difficulties = questions.map(q => q.difficulty.toLowerCase());
+    const difficulties = questions.map((q) => q.difficulty.toLowerCase());
     return (
-      difficulties.filter(d => d === 'easy').length === 2 &&
-      difficulties.filter(d => d === 'medium').length === 2 &&
-      difficulties.filter(d => d === 'hard').length === 2
+      difficulties.filter((d) => d === 'easy').length === 2 &&
+      difficulties.filter((d) => d === 'medium').length === 2 &&
+      difficulties.filter((d) => d === 'hard').length === 2
     );
   }
 
@@ -740,10 +775,10 @@ class GeminiService {
     }
 
     const validDifficulties = ['easy', 'medium', 'hard'];
-    const isValidQuestion = (q: QuestionResponse) => 
-      q.question && 
-      q.context && 
-      q.type === 'behavioral' && 
+    const isValidQuestion = (q: QuestionResponse) =>
+      q.question &&
+      q.context &&
+      q.type === 'behavioral' &&
       validDifficulties.includes(q.difficulty.toLowerCase()) &&
       Array.isArray(q.expectedTopics) &&
       q.expectedTopics.length > 0;
@@ -752,18 +787,18 @@ class GeminiService {
       return false;
     }
 
-    const difficulties = questions.map(q => q.difficulty.toLowerCase());
+    const difficulties = questions.map((q) => q.difficulty.toLowerCase());
     return (
-      difficulties.filter(d => d === 'easy').length === 1 &&
-      difficulties.filter(d => d === 'medium').length === 2 &&
-      difficulties.filter(d => d === 'hard').length === 1
+      difficulties.filter((d) => d === 'easy').length === 1 &&
+      difficulties.filter((d) => d === 'medium').length === 2 &&
+      difficulties.filter((d) => d === 'hard').length === 1
     );
   }
 
   async analyzeFeedback(
     question: string,
     answer: string,
-    requirements: JobRequirements
+    requirements: JobRequirements,
   ): Promise<InterviewFeedback> {
     const prompt = `
       Analise a resposta do candidato para a seguinte pergunta de entrevista.
@@ -804,7 +839,7 @@ class GeminiService {
         score: Number(response.score),
         suggestions: response.suggestions.map((s: string) => s.trim()),
         strengths: response.strengths.map((s: string) => s.trim()),
-        weaknesses: response.weaknesses.map((s: string) => s.trim())
+        weaknesses: response.weaknesses.map((s: string) => s.trim()),
       };
     } catch (error) {
       console.error('Erro ao analisar feedback:', error);
@@ -813,12 +848,12 @@ class GeminiService {
   }
 
   async generateFinalAnalysis(
-    interviewHistory: { 
+    interviewHistory: {
       question: string;
       answer: string;
       feedback: InterviewFeedback;
     }[],
-    requirements: JobRequirements
+    requirements: JobRequirements,
   ) {
     const prompt = `
       Analise o desempenho geral do candidato nesta entrevista.
@@ -866,7 +901,7 @@ class GeminiService {
         finalScore: Number(response.finalScore),
         strengths: response.strengths.map((s: string) => s.trim()),
         weaknesses: response.weaknesses.map((s: string) => s.trim()),
-        improvements: response.improvements.map((s: string) => s.trim())
+        improvements: response.improvements.map((s: string) => s.trim()),
       };
     } catch (error) {
       console.error('Erro ao gerar análise final:', error);
@@ -876,13 +911,13 @@ class GeminiService {
 
   private fixTruncatedJson(json: string): string {
     let result = json;
-    
+
     // Remove markdown
     result = result.replace(/```json/g, '').replace(/```/g, '');
-    
+
     // Remove tudo antes do primeiro {
     result = result.replace(/^[^{]*/, '');
-    
+
     // Verifica se o JSON está completo
     try {
       JSON.parse(result);
@@ -893,7 +928,7 @@ class GeminiService {
       const closeBraces = (result.match(/}/g) || []).length;
       const openBrackets = (result.match(/\[/g) || []).length;
       const closeBrackets = (result.match(/\]/g) || []).length;
-      
+
       // Adiciona chaves/colchetes faltantes
       while (openBraces > closeBraces) {
         result += '}';
@@ -901,10 +936,10 @@ class GeminiService {
       while (openBrackets > closeBrackets) {
         result += ']';
       }
-      
+
       // Remove vírgulas extras antes de fechamentos
       result = result.replace(/,(\s*[}\]])/g, '$1');
-      
+
       return result;
     }
   }
@@ -960,7 +995,7 @@ class GeminiService {
         try {
           const response = await this.generateContent(prompt);
           const cleanedResponse = this.fixTruncatedJson(response);
-          
+
           console.log('Resposta limpa:', cleanedResponse);
 
           try {
@@ -979,17 +1014,25 @@ class GeminiService {
               // Garantir valores padrão seguros
               const processedQuestion = {
                 question: String(q.question || '').trim() || `Pergunta ${index + 1}`,
-                options: Array.isArray(q.options) ? 
-                  q.options.map((o: any) => String(o || '').trim()) : 
-                  ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4'],
-                correctAnswer: typeof q.correctAnswer === 'number' && q.correctAnswer >= 0 && q.correctAnswer <= 3 ? 
-                  q.correctAnswer : 0,
+                options: Array.isArray(q.options)
+                  ? q.options.map((o: any) => String(o || '').trim())
+                  : ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4'],
+                correctAnswer:
+                  typeof q.correctAnswer === 'number' &&
+                  q.correctAnswer >= 0 &&
+                  q.correctAnswer <= 3
+                    ? q.correctAnswer
+                    : 0,
                 explanation: String(q.explanation || '').trim() || 'Explicação não fornecida',
-                type: ['technical', 'behavioral'].includes(String(q.type || '').toLowerCase()) ?
-                  (q.type?.toLowerCase() as 'technical' | 'behavioral') || 'technical' : 'technical',
-                difficulty: ['easy', 'medium', 'hard'].includes(String(q.difficulty || '').toLowerCase()) ?
-                  (q.difficulty?.toLowerCase() as 'easy' | 'medium' | 'hard') || 'medium' : 'medium',
-                topic: String(q.topic || '').trim() || requirements.mainTechnologies[0]
+                type: ['technical', 'behavioral'].includes(String(q.type || '').toLowerCase())
+                  ? (q.type?.toLowerCase() as 'technical' | 'behavioral') || 'technical'
+                  : 'technical',
+                difficulty: ['easy', 'medium', 'hard'].includes(
+                  String(q.difficulty || '').toLowerCase(),
+                )
+                  ? (q.difficulty?.toLowerCase() as 'easy' | 'medium' | 'hard') || 'medium'
+                  : 'medium',
+                topic: String(q.topic || '').trim() || requirements.mainTechnologies[0],
               };
 
               // Garantir que temos exatamente 4 opções
@@ -1014,11 +1057,13 @@ class GeminiService {
         } catch (error) {
           console.error(`Tentativa ${attempt + 1} falhou:`, error);
           lastError = error as Error;
-          await new Promise(resolve => setTimeout(resolve, 2000 * (attempt + 1)));
+          await new Promise((resolve) => setTimeout(resolve, 2000 * (attempt + 1)));
         }
       }
 
-      throw lastError || new Error('Não foi possível gerar perguntas válidas após várias tentativas');
+      throw (
+        lastError || new Error('Não foi possível gerar perguntas válidas após várias tentativas')
+      );
     } catch (error) {
       console.error('Erro ao gerar perguntas do quiz:', error);
       throw new Error('Não foi possível gerar as perguntas do quiz. Por favor, tente novamente.');
@@ -1026,4 +1071,4 @@ class GeminiService {
   }
 }
 
-export const geminiService = new GeminiService(); 
+export const geminiService = new GeminiService();

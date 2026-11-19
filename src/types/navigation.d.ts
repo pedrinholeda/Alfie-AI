@@ -1,4 +1,9 @@
-import type { InterviewFeedback, InterviewQuestion, JobRequirements, QuizQuestion } from '../services/gemini';
+import type {
+  InterviewFeedback,
+  InterviewQuestion,
+  JobRequirements,
+  QuizQuestion,
+} from '../services/gemini';
 
 export type RootStackParamList = {
   Introduction: undefined;

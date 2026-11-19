@@ -25,7 +25,9 @@ interface FeedbackHistoryContextData {
   clearHistory: () => Promise<void>;
 }
 
-const FeedbackHistoryContext = createContext<FeedbackHistoryContextData>({} as FeedbackHistoryContextData);
+const FeedbackHistoryContext = createContext<FeedbackHistoryContextData>(
+  {} as FeedbackHistoryContextData,
+);
 
 export const useFeedbackHistory = () => {
   const context = useContext(FeedbackHistoryContext);
@@ -93,4 +95,4 @@ export const FeedbackHistoryProvider: React.FC<{ children: React.ReactNode }> = 
       {children}
     </FeedbackHistoryContext.Provider>
   );
-}; 
+};

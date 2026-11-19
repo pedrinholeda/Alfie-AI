@@ -1,22 +1,12 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { theme } from '../styles/theme';
 import SafeLayout from '../components/SafeLayout';
 import AlfieAvatar from '../components/AlfieAvatar';
 
 const { width } = Dimensions.get('window');
 
-const QuizScreen: React.FC<{ navigation: any; route: any }> = ({
-  navigation,
-  route,
-}) => {
+const QuizScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, route }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null);
@@ -60,14 +50,14 @@ const QuizScreen: React.FC<{ navigation: any; route: any }> = ({
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.progressContainer}>
-            <View 
+            <View
               style={[
-                styles.progressBar, 
-                { 
+                styles.progressBar,
+                {
                   width: `${((currentQuestion + 1) / questions.length) * 100}%`,
                   backgroundColor: getProgressColor(),
-                }
-              ]} 
+                },
+              ]}
             />
           </View>
           <Text style={styles.progressText}>
@@ -76,16 +66,11 @@ const QuizScreen: React.FC<{ navigation: any; route: any }> = ({
         </View>
 
         <View style={styles.avatarContainer}>
-          <AlfieAvatar
-            expression={getAlfieExpression()}
-            style={styles.avatar}
-          />
+          <AlfieAvatar expression={getAlfieExpression()} style={styles.avatar} />
         </View>
 
         <ScrollView style={styles.content}>
-          <Text style={styles.question}>
-            {questions[currentQuestion].question}
-          </Text>
+          <Text style={styles.question}>{questions[currentQuestion].question}</Text>
 
           <View style={styles.optionsContainer}>
             {questions[currentQuestion].options.map((option: string, index: number) => (
@@ -94,17 +79,18 @@ const QuizScreen: React.FC<{ navigation: any; route: any }> = ({
                 style={[
                   styles.optionButton,
                   selectedAnswer === index && styles.selectedOption,
-                  selectedAnswer !== null && index === questions[currentQuestion].correctAnswer && styles.correctOption,
-                  selectedAnswer === index && selectedAnswer !== questions[currentQuestion].correctAnswer && styles.wrongOption,
+                  selectedAnswer !== null &&
+                    index === questions[currentQuestion].correctAnswer &&
+                    styles.correctOption,
+                  selectedAnswer === index &&
+                    selectedAnswer !== questions[currentQuestion].correctAnswer &&
+                    styles.wrongOption,
                 ]}
                 onPress={() => selectedAnswer === null && handleAnswer(index)}
                 disabled={selectedAnswer !== null}
               >
                 <Text
-                  style={[
-                    styles.optionText,
-                    selectedAnswer === index && styles.selectedOptionText,
-                  ]}
+                  style={[styles.optionText, selectedAnswer === index && styles.selectedOptionText]}
                 >
                   {option}
                 </Text>
@@ -114,9 +100,7 @@ const QuizScreen: React.FC<{ navigation: any; route: any }> = ({
 
           {selectedAnswer !== null && (
             <View style={styles.explanationContainer}>
-              <Text style={styles.explanationText}>
-                {questions[currentQuestion].explanation}
-              </Text>
+              <Text style={styles.explanationText}>{questions[currentQuestion].explanation}</Text>
             </View>
           )}
         </ScrollView>
@@ -232,4 +216,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QuizScreen; 
+export default QuizScreen;

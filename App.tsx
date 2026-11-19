@@ -21,10 +21,7 @@ export default function App() {
     <ApiKeyProvider>
       <FeedbackHistoryProvider>
         <NavigationContainer>
-          <StatusBar
-            barStyle="light-content"
-            backgroundColor={theme.colors.background}
-          />
+          <StatusBar barStyle="light-content" backgroundColor={theme.colors.background} />
           <Stack.Navigator
             screenOptions={{
               headerShown: false,

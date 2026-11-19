@@ -112,7 +112,7 @@ export const ApiKeyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         isKeyValid,
         validateKey,
         loading,
-        needsApiKey
+        needsApiKey,
       }}
     >
       {children}
@@ -126,4 +126,4 @@ export const useApiKey = () => {
     throw new Error('useApiKey must be used within an ApiKeyProvider');
   }
   return context;
-}; 
+};
