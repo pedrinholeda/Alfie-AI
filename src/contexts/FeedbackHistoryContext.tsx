@@ -11,11 +11,11 @@ interface FeedbackHistory {
   totalQuestions?: number;
   // Para Entrevista
   questions?: InterviewQuestion[];
-  answers?: Array<{
+  answers?: {
     question: string;
     answer: string;
     feedback: any;
-  }>;
+  }[];
   requirements?: JobRequirements;
 }
 
@@ -37,10 +37,6 @@ export const useFeedbackHistory = () => {
 
 export const FeedbackHistoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [history, setHistory] = useState<FeedbackHistory[]>([]);
-
-  useEffect(() => {
-    loadHistory();
-  }, []);
 
   const loadHistory = async () => {
     try {
@@ -81,6 +77,10 @@ export const FeedbackHistoryProvider: React.FC<{ children: React.ReactNode }> = 
       console.error('Erro ao limpar histórico:', error);
     }
   };
+
+  useEffect(() => {
+    loadHistory();
+  }, []);
 
   return (
     <FeedbackHistoryContext.Provider

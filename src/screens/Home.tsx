@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
   ActivityIndicator,
   Linking,
 } from 'react-native';
@@ -34,10 +33,6 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     message: '',
     type: 'info',
   });
-
-  useEffect(() => {
-    loadUserName();
-  }, []);
 
   const showToast = (message: string, type: 'success' | 'error' | 'info') => {
     setToast({
@@ -144,6 +139,11 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       </View>
     );
   };
+
+  useEffect(() => {
+    loadUserName();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- carrega o nome uma vez, ao montar
+  }, []);
 
   return (
     <SafeLayout>

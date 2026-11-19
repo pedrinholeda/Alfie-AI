@@ -1,5 +1,5 @@
 import { GOOGLE_GEMINI_API_KEY } from '@env';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 
 export interface JobRequirements {
   description: string;
@@ -341,7 +341,7 @@ class GeminiService {
 
       return text;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
+      if (isAxiosError(error)) {
         const statusCode = error.response?.status;
         const errorMessage = error.response?.data?.message || error.message;
         
@@ -887,7 +887,7 @@ class GeminiService {
     try {
       JSON.parse(result);
       return result;
-    } catch (e) {
+    } catch {
       // Se não está completo, tenta consertar
       const openBraces = (result.match(/{/g) || []).length;
       const closeBraces = (result.match(/}/g) || []).length;

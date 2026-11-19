@@ -23,18 +23,18 @@ interface ResultsScreenProps {
       total?: number;
       // Para resultados da Entrevista
       questions?: InterviewQuestion[];
-      answers?: Array<{
+      answers?: {
         question: string;
         answer: string;
         feedback: any;
-      }>;
+      }[];
       requirements?: JobRequirements;
     };
   };
 }
 
 const ResultsScreen: React.FC<ResultsScreenProps> = ({ navigation, route }) => {
-  const { score, total, questions, answers, requirements } = route.params;
+  const { score, total, questions, answers } = route.params;
 
   const isQuizResult = typeof score !== 'undefined' && typeof total !== 'undefined';
   

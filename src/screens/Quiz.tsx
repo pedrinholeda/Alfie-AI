@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,12 +6,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
-  ActivityIndicator,
 } from 'react-native';
 import { theme } from '../styles/theme';
 import SafeLayout from '../components/SafeLayout';
 import AlfieAvatar from '../components/AlfieAvatar';
-import Toast from '../components/Toast';
 
 const { width } = Dimensions.get('window');
 

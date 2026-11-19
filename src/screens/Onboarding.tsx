@@ -5,7 +5,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { theme } from '../styles/theme';
 import SafeLayout from '../components/SafeLayout';
 import AlfieAvatar from '../components/AlfieAvatar';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import KeyboardAwareView from '../components/KeyboardAwareView';
 
 const { width } = Dimensions.get('window');
