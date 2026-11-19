@@ -11,8 +11,7 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "jest",
-    "web:serve": "expo start --web --port 8081"
+    "test": "jest"
   },
   "dependencies": {
     "@expo/metro-runtime": "~5.0.5",
