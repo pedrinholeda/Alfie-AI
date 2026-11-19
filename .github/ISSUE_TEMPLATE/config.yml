@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Como contribuir
+    url: https://github.com/pedrinholeda/Alfie-AI/blob/main/CONTRIBUTING.md
+    about: Setup, o que rodar antes do PR e o formato dos commits.
+  - name: Falha de segurança
+    url: https://github.com/pedrinholeda/Alfie-AI/security/advisories/new
+    about: Relate em particular, nunca numa issue pública.
