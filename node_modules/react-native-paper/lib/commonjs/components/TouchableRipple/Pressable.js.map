@@ -1,1 +1,0 @@
-{"version":3,"names":["_reactNative","require","Pressable","exports","PressableNative"],"sourceRoot":"../../../../src","sources":["components/TouchableRipple/Pressable.tsx"],"mappings":";;;;;;AAQA,IAAAA,YAAA,GAAAC,OAAA;AAEA;AACA;;AA2BO,MAAMC,SAEZ,GAAAC,OAAA,CAAAD,SAAA,GAAGE,sBAAsB","ignoreList":[]}
