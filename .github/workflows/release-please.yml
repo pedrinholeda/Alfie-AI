@@ -1,0 +1,22 @@
+name: release-please
+
+# Lê os Conventional Commits da main, mantém o CHANGELOG.md e a versão, e deixa um PR de
+# release aberto. Fazer merge desse PR cria a tag vX.Y.Z e a Release no GitHub.
+# Precisa de "Allow GitHub Actions to create and approve pull requests" no repositório.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
