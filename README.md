@@ -1,134 +1,153 @@
-# Alfie - Seu Assistente Inteligente para Entrevistas 🚀🤖
+<p align="center"><img src="docs/images/icon.png" width="112" alt="Ícone do Alfie"></p>
+<h1 align="center">Alfie</h1>
+<p align="center"><em>Treine entrevistas de tecnologia com IA, sob medida para a vaga que você quer.</em></p>
+<p align="center">
+  <a href="https://github.com/pedrinholeda/Alfie-AI/actions/workflows/ci.yml"><img src="https://github.com/pedrinholeda/Alfie-AI/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="LICENSE.md"><img src="https://img.shields.io/badge/licen%C3%A7a-MIT-blue" alt="Licença MIT"></a>
+  <img src="https://img.shields.io/badge/Expo-SDK%2053-000020?logo=expo" alt="Expo SDK 53">
+</p>
 
-<div align="center">
+<p align="center">
+  <img src="docs/images/12-home-com-historico-dark.png" width="200" alt="Início com sessões, média e tendência">
+  <img src="docs/images/07-feedback-dark.png" width="200" alt="Pergunta respondida com nota e feedback">
+  <img src="docs/images/08-resultado-dark.png" width="200" alt="Resultado da entrevista com a análise do Alfie">
+  <img src="docs/images/10-quiz-dark.png" width="200" alt="Quiz com a resposta certa e a explicação">
+</p>
 
-![Alfie Logo](assets/icon.png)
+Treinar para entrevista sozinho é difícil: as perguntas genéricas da internet não têm nada a
+ver com a vaga, e ninguém diz o que faltou na sua resposta.
 
-</div>
+O Alfie lê a descrição da vaga que você colou, monta perguntas técnicas e comportamentais do
+nível certo, avalia cada resposta com nota e sugestões e, no fim, entrega uma análise com um
+plano de estudo. Funciona no Android, no iOS e no navegador.
 
-<p align="center">Prepare-se para sua próxima entrevista de tecnologia com simulações realistas e feedback alimentado por IA.</p>
+## O que faz
 
-<div align="center">
+**Entrevista simulada**
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-[![React Native](https://img.shields.io/badge/React_Native-20232A?style=flat&logo=react&logoColor=61DAFB)](https://reactnative.dev/)
-[![Expo](https://img.shields.io/badge/Expo-000020?style=flat&logo=expo&logoColor=white)](https://expo.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+- Perguntas técnicas e comportamentais tiradas dos requisitos, da senioridade e das tecnologias da vaga
+- Nota de 0 a 10 em cada resposta, com o que funcionou, o que faltou e como melhorar
+- Análise final do desempenho e um plano de estudo em passos
+- Pule perguntas que não quiser responder; sair no meio pede confirmação
 
-</div>
+**Quiz técnico**
 
-## ✨ Sobre o Alfie
+- Múltipla escolha com a explicação de cada questão e placar ao vivo
+- No resultado, os temas que você errou para revisar
 
-O Alfie é o seu companheiro ideal para dominar o processo de entrevistas na área de tecnologia. Desenvolvido com **React Native** e impulsionado pela **poderosa API do Google Gemini**, ele oferece uma plataforma interativa para você praticar e aprimorar suas habilidades de entrevista, cobrindo tanto aspectos técnicos quanto comportamentais. Diga adeus à ansiedade e olá à confiança!
+**Acompanhamento**
 
-## 📸 Telas do Aplicativo
+- Histórico no aparelho, com filtro por modo, média e tendência das últimas sessões
+- Praticar de novo com a mesma vaga, compartilhar o resultado, apagar uma sessão
+- Sessões curtas, padrão ou longas; tema claro, escuro ou do sistema
 
-Veja como o Alfie se parece em ação:
+## Como funciona
 
-|                                 Tela Inicial                                  |                                 Configuração da API Key                                 |                                         Home (Vazio)                                         |                                         Home (Preenchida)                                          |                                 Simulação de Entrevista                                 |                                 Feedback da Entrevista                                 |                                 Quiz Técnico                                 |
-| :---------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------: |
-| <img src="assets/screenshots/1.PNG" width="180" alt="Tela Inicial do Alfie"/> | <img src="assets/screenshots/2.PNG" width="180" alt="Tela de configuração da API Key"/> | <img src="assets/screenshots/3.PNG" width="180" alt="Tela Home antes de configurar a vaga"/> | <img src="assets/screenshots/4.PNG" width="180" alt="Tela Home com descrição da vaga preenchida"/> | <img src="assets/screenshots/5.PNG" width="180" alt="Tela de Simulação de Entrevista"/> | <img src="assets/screenshots/6.PNG" width="180" alt="Tela de Feedback da Entrevista"/> | <img src="assets/screenshots/7.PNG" width="180" alt="Tela de Quiz Técnico"/> |
+```mermaid
+flowchart LR
+  A["Texto da vaga"] --> B["Requisitos<br/>cargo, nível, tecnologias"]
+  B --> C["Perguntas<br/>ou quiz"]
+  C --> D["Suas respostas"]
+  D --> E["Avaliação de cada<br/>resposta"]
+  E --> F["Análise final<br/>e plano de estudo"]
+```
 
-Para preencher a descrição da vaga basta detalhar a vaga para qual voce quer ser treinado ou simplesmente copiar os requisitos da vaga e colar no campo da Home.
+Cada etapa é uma chamada ao Gemini, do Google, com a sua própria chave. Não existe servidor do
+Alfie: a chave, o histórico e os ajustes ficam no aparelho. Arquitetura em
+[docs/DESENVOLVIMENTO.md](docs/DESENVOLVIMENTO.md).
 
-<div align="center">
-<img src="assets/screenshots/requisitos.png" width="180" alt="Exemplo de preenchimento da vaga"/>
-</div>
+## Instalação
 
-## 💡 Funcionalidades Principais
+Você precisa do [Node.js](https://nodejs.org/) 20 ou mais novo e, para testar no celular, do
+app [Expo Go](https://expo.dev/go).
 
-- 🎯 **Simulação de Entrevista Realista**: Pratique com perguntas personalizadas com base na vaga e receba feedback construtivo sobre suas respostas.
-- 📝 **Quiz Técnico Interativo**: Teste e fortaleça seus conhecimentos em diversas áreas técnicas com quizzes de múltipla escolha.
-- 🧠 **IA Avançada com Google Gemini**: Obtenha perguntas e feedback inteligentes e relevantes para sua preparação.
-- 🌙 **Design Moderno e Intuitivo**: Uma interface limpa e agradável, otimizada para tema escuro.
-- 📊 **Análise de Desempenho**: Visualize feedback detalhado após as simulações para identificar pontos fortes e áreas de melhoria.
+```bash
+git clone https://github.com/pedrinholeda/Alfie-AI.git
+cd Alfie-AI
+npm install
+npm start
+```
 
-## 🚀 Começando
+Escaneie o QR code com o Expo Go (Android) ou com a câmera (iOS). Para abrir no navegador,
+aperte `w` no terminal ou rode `npm run web`.
 
-Siga estes passos simples para configurar e rodar o Alfie em seu ambiente local:
+## Primeiro uso
 
-### Pré-requisitos
+1. Veja a apresentação e diga como quer ser chamado.
+2. Crie uma chave gratuita no [Google AI Studio](https://aistudio.google.com/app/apikey) e cole
+   no app. Ele valida a chave e escolhe o modelo Gemini disponível.
+3. Na tela inicial, escolha **Entrevista simulada** ou **Quiz técnico**, cole a descrição da
+   vaga (ou toque em **Usar um exemplo**) e comece.
 
-Certifique-se de ter instalado em sua máquina:
+## Configuração
 
-- [Node.js](https://nodejs.org/) (versão 14 ou superior)
-- [npm](https://www.npmjs.com/get-npm) ou [yarn](https://yarnpkg.com/)
-- Aplicativo [Expo Go](https://expo.dev/client) instalado no seu celular (Android ou iOS)
-- Uma Chave API do Google Gemini (obtenha uma em [Google AI Studio](https://aistudio.google.com/))
+Tudo se ajusta no app, em **Ajustes**: nome, chave, tamanho das sessões, tema e apagar dados.
 
-### Instalação e Execução
+| arquivo                                            | o que muda                                                                                |
+| -------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| [`src/config/practice.ts`](src/config/practice.ts) | quantas perguntas tem cada tamanho de sessão, tamanho mínimo da vaga, limite do histórico |
+| [`src/config/ai.ts`](src/config/ai.ts)             | modelos Gemini em ordem de preferência, temperatura, tempo limite, novas tentativas       |
+| [`src/prompts/index.ts`](src/prompts/index.ts)     | o que a IA pergunta e como avalia, com o tom do Alfie                                     |
 
-1.  **Clone o repositório e instale as dependências:**
+Para não colar a chave a cada instalação durante o desenvolvimento, copie `.env.example` para
+`.env` e preencha `EXPO_PUBLIC_GEMINI_API_KEY`: o campo da chave já vem preenchido. Não use
+isso num build publicado, porque a variável vai junto no pacote.
 
-    ```bash
-    # Clone o repositório
-    git clone https://github.com/seu-usuario/alfie-interview-app.git
-    cd alfie-interview-app
+## Perguntas frequentes
 
-    # Instale as dependências (usando npm)
-    npm install --legacy-peer-deps
+**Quanto custa?**
+O Alfie é gratuito. O Gemini tem uma cota gratuita que cobre o uso de treino; acima dela, a
+cobrança é do Google, na sua conta.
 
-    # Ou usando yarn
-    # yarn install --legacy-peer-deps
-    ```
+**Para onde vão meus dados?**
+O texto da vaga e suas respostas vão só para a API do Gemini, para gerar e avaliar as
+perguntas. A chave fica no cofre seguro do celular (Keychain ou Keystore); na versão web, no
+armazenamento do navegador. Histórico e ajustes nunca saem do aparelho.
 
-2.  **Configure sua Chave API:**
+**Dá para colar o link da vaga?**
+Não. A maioria dos sites de vaga bloqueia leitura automática, então o app pede o texto. Abra a
+vaga, selecione tudo e cole.
 
-    Crie um arquivo chamado `.env` na raiz do projeto e adicione sua chave API:
+**Funciona para vagas que não são de desenvolvimento?**
+Sim. As perguntas saem da vaga: dados, design, produto, QA, infraestrutura e o que mais estiver
+na descrição.
 
-    ```bash
-    echo "GOOGLE_GEMINI_API_KEY=sua-chave-api-aqui" > .env
-    ```
+## Solução de problemas
 
-    _Substitua `sua-chave-api-aqui` pela sua chave API real._
+| mensagem                                     | causa                                       | solução                                                            |
+| -------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------ |
+| A chave do Gemini não foi aceita             | chave copiada pela metade ou revogada       | crie outra no AI Studio e troque em Ajustes                        |
+| O limite de uso da sua chave foi atingido    | cota gratuita do minuto ou do dia acabou    | espere alguns minutos e tente de novo                              |
+| Sem conexão com o Gemini                     | sem internet ou rede bloqueando o Google    | confira a rede; em rede corporativa, tente outra                   |
+| A resposta da IA veio num formato inesperado | o modelo devolveu algo que não dá para usar | toque em **Tentar de novo**; o app já tenta sozinho até duas vezes |
 
-3.  **Inicie o Aplicativo:**
+## Estrutura
 
-    ```bash
-    # Inicie o servidor de desenvolvimento Expo
-    npx expo start
-    ```
+```
+App.tsx            rotas e provedores
+src/screens/       uma tela por arquivo
+src/components/    componentes de interface (ui.tsx) e peças compartilhadas
+src/services/      cliente HTTP do Gemini
+src/prompts/       os prompts, num arquivo só
+src/lib/           regras puras, todas com teste
+src/state/         estado global: perfil, ajustes, chave e histórico
+src/storage/       AsyncStorage e cofre seguro
+src/theme/         cores do tema claro e escuro, espaçamento e tipografia
+src/config/        o que dá para ajustar sem ler o resto do código
+```
 
-    Este comando iniciará o servidor e exibir\u00E1 um QR Code no terminal.
+O papel de cada módulo está em [docs/DESENVOLVIMENTO.md](docs/DESENVOLVIMENTO.md).
 
-### 📱 Rodando no seu Celular
+## Status e roadmap
 
-Com o servidor iniciado e o QR Code visível no terminal:
+O app roda na web e foi testado de ponta a ponta no navegador. O build nativo para as lojas
+ainda não foi feito. O que vem a seguir está em [docs/ROADMAP.md](docs/ROADMAP.md); o que já
+saiu, no [CHANGELOG](CHANGELOG.md).
 
-1.  Abra o aplicativo **Expo Go** no seu smartphone.
-2.  Escaneie o QR Code exibido no terminal do seu computador.
-3.  O Expo Go carregar\u00E1 o aplicativo Alfie diretamente no seu dispositivo para teste. Certifique-se de que seu computador e celular estejam na mesma rede Wi-Fi.
+## Contribuindo
 
-## 🎯 Como Usar
+Bug e PR são bem-vindos. Veja o [CONTRIBUTING.md](CONTRIBUTING.md).
 
-1.  Ao abrir o app pela primeira vez, insira sua **Chave API do Google Gemini** na tela solicitada (se não estiver configurada no `.env`).
-2.  Na tela principal (Home), cole a **descrição da vaga** para a qual você est\u00E1 se preparando.
-3.  Escolha entre **"Simula\u00E7\u00E3o de Entrevista"** ou **"Quiz Técnico"** para come\u00E7ar sua pr\u00E1tica.
-4.  Siga as instru\u00E7\u00F5es na tela, responda \u00E0s perguntas e receba feedback detalhado ap\u00F3s a simula\u00E7\u00E3o ou veja seus resultados no quiz.
+## Licença
 
-## 🛠️ Tecnologias Utilizadas
-
-- [React Native](https://reactnative.dev/)
-- [Expo](https://expo.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Google Gemini API](https://ai.google.dev/)
-- [React Navigation](https://reactnavigation.org/)
-- [Async Storage](https://react-native-async-storage.github.io/async-storage/)
-- [Styled Components](https://styled-components.com/)
-
-## 📄 Licen\u00E7a
-
-Este projeto est\u00E1 sob a licen\u00E7a MIT. Veja o arquivo [LICENSE.md](LICENSE.md) para mais detalhes.
-
-## 🤝 Conecte-se Comigo
-
-Ficarei feliz em conectar!
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](<[https://www.linkedin.com/in/pedroleda](https://www.linkedin.com/in/pedroleda)>)
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/pedrinholeda)
-
----
-
-<div align="center">
-Feito com ☕️ por Pedro Leda
-</div>
+MIT, veja [LICENSE.md](LICENSE.md). Feito por [Pedro Leda](https://www.linkedin.com/in/pedroleda/).
