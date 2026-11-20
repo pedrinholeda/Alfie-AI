@@ -1,7 +1,9 @@
 import { GOOGLE_GEMINI_API_KEY } from '@env';
 import axios, { isAxiosError } from 'axios';
 
+import { aiConfig } from '../config/ai';
 import { isUrl, sanitizeJobInfo } from '../lib/jobText';
+import { pickModel } from '../lib/models';
 
 export interface JobRequirements {
   description: string;
@@ -76,8 +78,8 @@ interface RawQuizQuestion {
 
 class GeminiService {
   private apiKey: string;
-  private baseUrl = 'https://generativelanguage.googleapis.com/v1beta';
-  private model = 'gemini-2.0-flash';
+  private baseUrl = aiConfig.baseUrl;
+  private model: string = aiConfig.preferredModels[0];
 
   constructor() {
     if (!GOOGLE_GEMINI_API_KEY) {
@@ -125,19 +127,15 @@ class GeminiService {
       const modelsData = await modelsResponse.json();
       const availableModels = modelsData.models || [];
 
-      // Encontrar o modelo correto
-      const model = availableModels.find((m: any) => m.name.includes('gemini-2.0-flash'));
+      // Escolhe o modelo entre os que a chave enxerga (ver src/config/ai.ts)
+      const model = pickModel(availableModels, aiConfig.preferredModels);
       if (!model) {
-        console.error(
-          'Modelo gemini-2.0-flash não encontrado. Modelos disponíveis:',
-          availableModels,
-        );
         throw new Error(
-          'Modelo gemini-2.0-flash não disponível. Por favor, verifique se você tem acesso ao modelo correto.',
+          'Nenhum modelo Gemini disponível para esta chave. Verifique o acesso no Google AI Studio.',
         );
       }
 
-      this.model = model.name.split('/').pop();
+      this.model = model;
 
       // Tentar fazer uma chamada simples para validar a key
       const response = await fetch(
