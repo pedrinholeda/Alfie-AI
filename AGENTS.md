@@ -76,6 +76,7 @@ npx expo export --platform web
 - Tela não troca depois de salvar a chave → as rotas dependem de `hasApiKey`; confira se `saveApiKey` terminou sem erro.
 - `Alert.alert` com botões não faz nada na web → use `confirm()`.
 - `npx expo install --check` falha no CI → alguma dependência fora da versão do SDK 53; rode `npx expo install --fix`.
+- `app.json` e `.release-please-manifest.json` ficam fora do Prettier → o release-please reescreve os dois a cada versão com a formatação dele; mantenha o `app.json` legível à mão.
 - O Google desliga modelos com frequência → não fixe nome de modelo no código; ajuste `preferredModels` em `src/config/ai.ts`.
 - Com a janela do navegador do app escondida, prints falham → use Playwright headless.
 
