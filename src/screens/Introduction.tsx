@@ -1,327 +1,158 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-  ScrollView,
-  Platform,
-} from 'react-native';
-import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
-import { theme } from '../styles/theme';
-import Toast from '../components/Toast';
-import SafeLayout from '../components/SafeLayout';
-import AlfieAvatar from '../components/AlfieAvatar';
+/** Apresentação do Alfie. Aparece só na primeira abertura. */
+import React, { useRef, useState } from 'react';
+import { FlatList, Text, View } from 'react-native';
 
-const { width } = Dimensions.get('window');
+import AlfieAvatar from '../components/AlfieAvatar';
+import { Button, Icon, Screen, type IconName } from '../components/ui';
+import { useApp } from '../state/app';
+import { useTheme } from '../theme';
 
 interface Slide {
-  id: number;
   title: string;
-  description: string;
-  mainIcon: string;
-  secondaryIcons: string[];
-  color: string;
-  alfieExpression: 'happy' | 'thinking' | 'excited' | 'neutral';
+  text: string;
+  expression: 'happy' | 'thinking' | 'excited' | 'neutral';
+  points: { icon: IconName; text: string }[];
 }
 
 const slides: Slide[] = [
   {
-    id: 1,
-    title: 'Bem-vindo ao Alfie! 👋',
-    description:
-      'Seu assistente pessoal de entrevistas potencializado por IA. Vou te ajudar a se preparar para entrevistas técnicas de forma inteligente e personalizada.',
-    mainIcon: 'robot-happy',
-    secondaryIcons: ['star', 'heart', 'star-shooting'],
-    color: '#6C63FF',
-    alfieExpression: 'happy',
+    title: 'Treine para a vaga que você quer',
+    text: 'Cole a descrição de uma vaga e o Alfie monta uma entrevista sob medida, com perguntas técnicas e comportamentais.',
+    expression: 'happy',
+    points: [
+      { icon: 'file-document-outline', text: 'Qualquer área de tecnologia' },
+      { icon: 'tune-variant', text: 'Do estágio ao sênior' },
+    ],
   },
   {
-    id: 2,
-    title: 'Dois Modos de Prática 🎯',
-    description:
-      'Escolha entre Simulação de Entrevista para praticar com perguntas abertas e feedback detalhado, ou Quiz Técnico para testar seus conhecimentos com questões de múltipla escolha.',
-    mainIcon: 'school-outline',
-    secondaryIcons: ['account-tie', 'help-circle', 'check-circle'],
-    color: '#4CAF50',
-    alfieExpression: 'thinking',
+    title: 'Dois jeitos de praticar',
+    text: 'Na entrevista simulada você responde com suas palavras e recebe nota e feedback. No quiz, testa o conhecimento com múltipla escolha.',
+    expression: 'thinking',
+    points: [
+      { icon: 'account-tie-voice-outline', text: 'Entrevista com feedback por resposta' },
+      { icon: 'checkbox-marked-circle-outline', text: 'Quiz com explicação de cada questão' },
+    ],
   },
   {
-    id: 3,
-    title: 'Simulação de Entrevista 🗣️',
-    description:
-      'Pratique com perguntas abertas personalizadas, receba feedback detalhado sobre suas respostas e dicas para melhorar suas habilidades de comunicação.',
-    mainIcon: 'account-tie',
-    secondaryIcons: ['message-text', 'thumb-up', 'lightbulb-on'],
-    color: '#2196F3',
-    alfieExpression: 'excited',
-  },
-  {
-    id: 4,
-    title: 'Quiz Técnico 📝',
-    description:
-      'Teste seus conhecimentos técnicos com perguntas de múltipla escolha, receba explicações detalhadas e acompanhe seu progresso com pontuações e análises.',
-    mainIcon: 'help-circle',
-    secondaryIcons: ['check-circle', 'brain', 'trophy'],
-    color: '#FFC107',
-    alfieExpression: 'neutral',
-  },
-  {
-    id: 5,
-    title: 'Feedback Inteligente ⚡',
-    description:
-      'Receba análises detalhadas do seu desempenho, com pontuação, pontos fortes, sugestões de melhoria e dicas práticas para cada pergunta.',
-    mainIcon: 'lightning-bolt',
-    secondaryIcons: ['chart-line', 'thumb-up', 'message-text'],
-    color: '#9C27B0',
-    alfieExpression: 'excited',
-  },
-  {
-    id: 6,
-    title: 'Pronto para Começar? 🚀',
-    description:
-      'Vamos juntos transformar suas entrevistas em oportunidades de sucesso! Configure seu perfil e comece a praticar agora mesmo.',
-    mainIcon: 'rocket',
-    secondaryIcons: ['check-circle', 'account', 'arrow-right-circle'],
-    color: '#E91E63',
-    alfieExpression: 'excited',
+    title: 'Acompanhe sua evolução',
+    text: 'Cada sessão fica salva no seu aparelho, com pontos fortes, pontos a desenvolver e um plano de estudo.',
+    expression: 'excited',
+    points: [
+      { icon: 'chart-line', text: 'Histórico e média das notas' },
+      { icon: 'shield-lock-outline', text: 'Seus dados ficam só com você' },
+    ],
   },
 ];
 
-const IntroductionScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const scrollViewRef = React.useRef<ScrollView>(null);
-  const [toast, setToast] = useState<{
-    visible: boolean;
-    message: string;
-    type: 'success' | 'error' | 'info';
-  }>({
-    visible: false,
-    message: '',
-    type: 'info',
-  });
+export default function IntroductionScreen() {
+  const theme = useTheme();
+  // Medida real da área dos slides: na web e no tablet ela é menor que a janela.
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  const { width } = size;
+  const { updateSettings } = useApp();
+  const [index, setIndex] = useState(0);
+  const list = useRef<FlatList<Slide>>(null);
+  const last = index === slides.length - 1;
 
-  const showToast = (message: string, type: 'success' | 'error' | 'info') => {
-    setToast({
-      visible: true,
-      message,
-      type,
-    });
+  const finish = () => updateSettings({ introSeen: true });
+  const next = () => {
+    if (last) return finish();
+    list.current?.scrollToIndex({ index: index + 1, animated: true });
+    setIndex(index + 1);
   };
-
-  const hideToast = () => {
-    setToast((prev) => ({ ...prev, visible: false }));
-  };
-
-  const handleNext = () => {
-    if (currentSlide < slides.length - 1) {
-      const nextSlide = currentSlide + 1;
-      setCurrentSlide(nextSlide);
-      scrollViewRef.current?.scrollTo({
-        x: nextSlide * width,
-        animated: true,
-      });
-    } else {
-      showToast('Vamos começar sua jornada!', 'success');
-      setTimeout(() => {
-        navigation.replace('Onboarding');
-      }, 1000);
-    }
-  };
-
-  const handleSkip = () => {
-    showToast('Pulando introdução...', 'info');
-    setTimeout(() => {
-      navigation.replace('Onboarding');
-    }, 1000);
-  };
-
-  const renderSecondaryIcons = (icons: string[], color: string) => (
-    <View style={styles.secondaryIconsContainer}>
-      {icons.map((icon, index) => (
-        <View
-          key={icon}
-          style={[
-            styles.secondaryIconWrapper,
-            {
-              backgroundColor: `${color}15`,
-              transform: [{ translateX: index * 20 }, { translateY: Math.sin(index) * 20 }],
-            },
-          ]}
-        >
-          <MaterialCommunityIcons name={icon as any} size={24} color={color} />
-        </View>
-      ))}
-    </View>
-  );
-
-  const renderSlide = (slide: Slide) => (
-    <View key={slide.id} style={styles.slide}>
-      <View style={styles.avatarContainer}>
-        <AlfieAvatar size={width * 0.4} expression={slide.alfieExpression} style={styles.avatar} />
-        {renderSecondaryIcons(slide.secondaryIcons, slide.color)}
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>{slide.title}</Text>
-        <Text style={styles.description}>{slide.description}</Text>
-      </View>
-    </View>
-  );
 
   return (
-    <SafeLayout>
-      <Toast
-        visible={toast.visible}
-        message={toast.message}
-        type={toast.type}
-        onDismiss={hideToast}
-      />
-
-      <ScrollView
-        ref={scrollViewRef}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onMomentumScrollEnd={(event) => {
-          const slideIndex = Math.round(event.nativeEvent.contentOffset.x / width);
-          setCurrentSlide(slideIndex);
-        }}
-        scrollEventThrottle={16}
-      >
-        {slides.map(renderSlide)}
-      </ScrollView>
-
-      <View style={styles.footer}>
-        <View style={styles.pagination}>
-          {slides.map((_, index) => (
-            <View
-              key={index}
-              style={[styles.paginationDot, index === currentSlide && styles.paginationDotActive]}
+    <Screen
+      scroll={false}
+      contentStyle={{ paddingHorizontal: 0 }}
+      footer={
+        <View style={{ gap: theme.spacing.lg }}>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'center', gap: 8 }}
+            accessibilityLabel={`Página ${index + 1} de ${slides.length}`}
+          >
+            {slides.map((_, i) => (
+              <View
+                key={i}
+                style={{
+                  width: i === index ? 22 : 8,
+                  height: 8,
+                  borderRadius: 4,
+                  backgroundColor: i === index ? theme.colors.primary : theme.colors.border,
+                }}
+              />
+            ))}
+          </View>
+          <View style={{ flexDirection: 'row', gap: theme.spacing.md }}>
+            {!last ? (
+              <Button title="Pular" variant="ghost" onPress={finish} style={{ flex: 1 }} />
+            ) : null}
+            <Button
+              title={last ? 'Começar' : 'Próximo'}
+              icon={last ? 'rocket-launch-outline' : undefined}
+              onPress={next}
+              style={{ flex: 2 }}
             />
-          ))}
+          </View>
         </View>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
-            <Text style={styles.skipButtonText}>Pular</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.button} onPress={handleNext}>
-            <Text style={styles.buttonText}>
-              {currentSlide === slides.length - 1 ? 'Começar' : 'Próximo'}
-            </Text>
-            <Ionicons name="arrow-forward" size={20} color="#FFFFFF" style={styles.buttonIcon} />
-          </TouchableOpacity>
-        </View>
+      }
+    >
+      <View style={{ flex: 1 }} onLayout={(e) => setSize(e.nativeEvent.layout)}>
+        {width > 0 ? (
+          <FlatList
+            ref={list}
+            data={slides}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item.title}
+            onMomentumScrollEnd={(e) => setIndex(Math.round(e.nativeEvent.contentOffset.x / width))}
+            getItemLayout={(_, i) => ({ length: width, offset: width * i, index: i })}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  width,
+                  height: size.height,
+                  paddingHorizontal: theme.spacing.xl,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: theme.spacing.xl,
+                }}
+              >
+                <AlfieAvatar size={140} expression={item.expression} />
+                <View style={{ gap: theme.spacing.md, maxWidth: 480 }}>
+                  <Text
+                    style={{ ...theme.type.display, color: theme.colors.text, textAlign: 'center' }}
+                    accessibilityRole="header"
+                  >
+                    {item.title}
+                  </Text>
+                  <Text
+                    style={{
+                      ...theme.type.body,
+                      color: theme.colors.textMuted,
+                      textAlign: 'center',
+                    }}
+                  >
+                    {item.text}
+                  </Text>
+                </View>
+                <View style={{ gap: theme.spacing.md }}>
+                  {item.points.map((p) => (
+                    <View
+                      key={p.text}
+                      style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}
+                    >
+                      <Icon name={p.icon} color={theme.colors.primary} />
+                      <Text style={{ ...theme.type.body, color: theme.colors.text }}>{p.text}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+          />
+        ) : null}
       </View>
-    </SafeLayout>
+    </Screen>
   );
-};
-
-const styles = StyleSheet.create({
-  slide: {
-    width,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: theme.spacing.lg,
-  },
-  avatarContainer: {
-    width: width * 0.8,
-    height: width * 0.8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: theme.spacing.xl,
-  },
-  avatar: {
-    marginBottom: theme.spacing.lg,
-  },
-  secondaryIconsContainer: {
-    flexDirection: 'row',
-    position: 'absolute',
-    bottom: 0,
-    left: width * 0.1,
-  },
-  secondaryIconWrapper: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 5,
-  },
-  textContainer: {
-    alignItems: 'center',
-    paddingHorizontal: theme.spacing.lg,
-    flex: 1,
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: theme.colors.text,
-    marginBottom: theme.spacing.md,
-    textAlign: 'center',
-  },
-  description: {
-    fontSize: 16,
-    color: theme.colors.textSecondary,
-    textAlign: 'center',
-    lineHeight: 24,
-  },
-  footer: {
-    paddingBottom: Platform.OS === 'ios' ? theme.spacing.xl : theme.spacing.lg,
-  },
-  pagination: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: theme.spacing.xl,
-  },
-  paginationDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: theme.colors.textSecondary,
-    marginHorizontal: 4,
-    opacity: 0.4,
-  },
-  paginationDotActive: {
-    opacity: 1,
-    backgroundColor: theme.colors.primary,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: theme.spacing.lg,
-  },
-  button: {
-    backgroundColor: theme.colors.primary,
-    paddingVertical: theme.spacing.md,
-    paddingHorizontal: theme.spacing.xl,
-    borderRadius: theme.borderRadius.lg,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-    marginRight: 8,
-  },
-  buttonIcon: {
-    marginLeft: 4,
-  },
-  skipButton: {
-    paddingVertical: theme.spacing.md,
-    paddingHorizontal: theme.spacing.lg,
-  },
-  skipButtonText: {
-    color: theme.colors.textSecondary,
-    fontSize: 16,
-  },
-});
-
-export default IntroductionScreen;
+}

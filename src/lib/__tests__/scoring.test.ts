@@ -1,4 +1,4 @@
-import { averageScore, quizPercentage } from '../scoring';
+import { averageScore } from '../scoring';
 
 describe('averageScore', () => {
   it('faz a média das notas', () => {
@@ -21,15 +21,5 @@ describe('averageScore', () => {
 
   it('devolve zero sem respostas, em vez de NaN', () => {
     expect(averageScore([])).toBe(0);
-  });
-});
-
-describe('quizPercentage', () => {
-  it('calcula o percentual de acertos', () => {
-    expect(quizPercentage(7, 10)).toBe(70);
-  });
-
-  it('não divide por zero', () => {
-    expect(quizPercentage(0, 0)).toBe(0);
   });
 });

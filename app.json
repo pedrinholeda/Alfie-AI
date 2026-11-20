@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Alfie Interview",
+    "name": "Alfie",
     "slug": "alfie-interview",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "dark",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash.png",
@@ -29,11 +29,12 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-font"],
+    "plugins": ["expo-font", "expo-secure-store"],
     "extra": {
       "eas": {
         "projectId": "alfie-interview"
       }
-    }
+    },
+    "description": "Treino de entrevistas de tecnologia com IA: entrevista simulada e quiz sob medida para a vaga."
   }
 }

@@ -11,8 +11,3 @@ export function averageScore(answers: ScoredAnswer[]): number {
   const total = answers.reduce((acc, curr) => acc + (curr.feedback?.score || 0), 0);
   return total / answers.length;
 }
-
-/** Percentual de acertos do quiz, de 0 a 100. */
-export function quizPercentage(score: number, total: number): number {
-  return (score / (total || 1)) * 100;
-}

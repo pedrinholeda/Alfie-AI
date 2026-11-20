@@ -1,57 +1,51 @@
-import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+/** O Alfie, com uma expressão para cada momento. */
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { theme } from '../styles/theme';
+import React from 'react';
+import { View, type ViewStyle } from 'react-native';
 
-interface AlfieAvatarProps {
+import { useTheme } from '../theme';
+
+export type AlfieExpression = 'happy' | 'thinking' | 'excited' | 'neutral';
+
+const icons = {
+  happy: 'robot-happy-outline',
+  thinking: 'robot-confused-outline',
+  excited: 'robot-excited-outline',
+  neutral: 'robot-outline',
+} as const;
+
+export default function AlfieAvatar({
+  size = 100,
+  style,
+  expression = 'happy',
+}: {
   size?: number;
   style?: ViewStyle;
-  expression?: 'happy' | 'thinking' | 'excited' | 'neutral';
-}
-
-const AlfieAvatar: React.FC<AlfieAvatarProps> = ({ size = 100, style, expression = 'happy' }) => {
-  const getExpression = () => {
-    switch (expression) {
-      case 'thinking':
-        return 'robot-confused';
-      case 'excited':
-        return 'robot-excited';
-      case 'neutral':
-        return 'robot';
-      case 'happy':
-      default:
-        return 'robot-happy';
-    }
-  };
-
+  expression?: AlfieExpression;
+}) {
+  const theme = useTheme();
   return (
     <View
+      accessible
+      accessibilityRole="image"
+      accessibilityLabel="Alfie"
       style={[
-        styles.container,
         {
           width: size,
           height: size,
           borderRadius: size / 2,
-          backgroundColor: `${theme.colors.primary}15`,
+          backgroundColor: theme.colors.primarySoft,
+          alignItems: 'center',
+          justifyContent: 'center',
         },
         style,
       ]}
     >
       <MaterialCommunityIcons
-        name={getExpression()}
-        size={size * 0.7}
+        name={icons[expression]}
+        size={size * 0.6}
         color={theme.colors.primary}
       />
     </View>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 10,
-  },
-});
-
-export default AlfieAvatar;
+}
