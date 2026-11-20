@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default KeyboardAwareView; 
+export default KeyboardAwareView;

@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
   ActivityIndicator,
   Linking,
 } from 'react-native';
@@ -35,10 +34,6 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     type: 'info',
   });
 
-  useEffect(() => {
-    loadUserName();
-  }, []);
-
   const showToast = (message: string, type: 'success' | 'error' | 'info') => {
     setToast({
       visible: true,
@@ -48,7 +43,7 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   };
 
   const hideToast = () => {
-    setToast(prev => ({ ...prev, visible: false }));
+    setToast((prev) => ({ ...prev, visible: false }));
   };
 
   const loadUserName = async () => {
@@ -63,7 +58,10 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
   const handleStartProcess = async () => {
     if (jobInfo.trim().length < 30) {
-      showToast('Por favor, insira uma descrição mais detalhada da vaga (mínimo 30 caracteres).', 'error');
+      showToast(
+        'Por favor, insira uma descrição mais detalhada da vaga (mínimo 30 caracteres).',
+        'error',
+      );
       setError('Por favor, insira uma descrição mais detalhada da vaga (mínimo 30 caracteres).');
       return;
     }
@@ -111,21 +109,22 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       }
     } catch (error) {
       console.error('Erro ao processar informações da vaga:', error);
-      
+
       let errorMessage = 'Ocorreu um erro ao processar as informações da vaga.';
-      
+
       if (error instanceof Error) {
         if (error.message.includes('Links diretos não podem ser processados')) {
           errorMessage = 'Por favor, cole o texto da descrição da vaga ao invés do link.';
         } else if (error.message.includes('texto fornecido é muito curto')) {
-          errorMessage = 'A descrição fornecida é muito curta. Adicione mais detalhes sobre a vaga.';
+          errorMessage =
+            'A descrição fornecida é muito curta. Adicione mais detalhes sobre a vaga.';
         } else if (error.message.includes('API key não configurada')) {
           errorMessage = 'Chave API não configurada. Por favor, configure nas configurações.';
         } else {
           errorMessage = error.message;
         }
       }
-      
+
       showToast(errorMessage, 'error');
       setError(errorMessage);
     } finally {
@@ -136,7 +135,7 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
   const renderProcessingStep = () => {
     if (!processingStep) return null;
-    
+
     return (
       <View style={styles.processingContainer}>
         <ActivityIndicator color={theme.colors.primary} style={styles.spinner} />
@@ -144,6 +143,11 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       </View>
     );
   };
+
+  useEffect(() => {
+    loadUserName();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- carrega o nome uma vez, ao montar
+  }, []);
 
   return (
     <SafeLayout>
@@ -153,10 +157,8 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
         type={toast.type}
         onDismiss={hideToast}
       />
-      
-      <KeyboardAwareView
-        contentContainerStyle={styles.contentContainer}
-      >
+
+      <KeyboardAwareView contentContainerStyle={styles.contentContainer}>
         <View style={styles.header}>
           <AlfieAvatar
             size={60}
@@ -171,23 +173,22 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <MaterialCommunityIcons
-              name="school-outline"
-              size={24}
-              color={theme.colors.primary}
-            />
+            <MaterialCommunityIcons name="school-outline" size={24} color={theme.colors.primary} />
             <Text style={styles.cardTitle}>Modo de Prática</Text>
           </View>
-          
-          <Text style={styles.description}>
-            Escolha como você quer praticar hoje:
-          </Text>
+
+          <Text style={styles.description}>Escolha como você quer praticar hoje:</Text>
 
           <View style={styles.modeSelectionContainer}>
             <TouchableOpacity
               style={[
                 styles.modeButton,
-                { backgroundColor: selectedMode === 'interview' ? theme.colors.primary : `${theme.colors.primary}30` }
+                {
+                  backgroundColor:
+                    selectedMode === 'interview'
+                      ? theme.colors.primary
+                      : `${theme.colors.primary}30`,
+                },
               ]}
               onPress={() => setSelectedMode('interview')}
               disabled={loading}
@@ -198,10 +199,22 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
                 color={selectedMode === 'interview' ? '#FFFFFF' : theme.colors.primary}
               />
               <View style={styles.modeButtonContent}>
-                <Text style={[styles.modeButtonTitle, { color: selectedMode === 'interview' ? '#FFFFFF' : theme.colors.text }]}>
+                <Text
+                  style={[
+                    styles.modeButtonTitle,
+                    { color: selectedMode === 'interview' ? '#FFFFFF' : theme.colors.text },
+                  ]}
+                >
                   Simulação de Entrevista
                 </Text>
-                <Text style={[styles.modeButtonDescription, { color: selectedMode === 'interview' ? '#FFFFFF' : theme.colors.textSecondary }]}>
+                <Text
+                  style={[
+                    styles.modeButtonDescription,
+                    {
+                      color: selectedMode === 'interview' ? '#FFFFFF' : theme.colors.textSecondary,
+                    },
+                  ]}
+                >
                   Pratique com perguntas abertas e receba feedback detalhado
                 </Text>
               </View>
@@ -210,7 +223,10 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
             <TouchableOpacity
               style={[
                 styles.modeButton,
-                { backgroundColor: selectedMode === 'quiz' ? theme.colors.success : `${theme.colors.success}30` }
+                {
+                  backgroundColor:
+                    selectedMode === 'quiz' ? theme.colors.success : `${theme.colors.success}30`,
+                },
               ]}
               onPress={() => setSelectedMode('quiz')}
               disabled={loading}
@@ -221,10 +237,20 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
                 color={selectedMode === 'quiz' ? '#FFFFFF' : theme.colors.success}
               />
               <View style={styles.modeButtonContent}>
-                <Text style={[styles.modeButtonTitle, { color: selectedMode === 'quiz' ? '#FFFFFF' : theme.colors.text }]}>
+                <Text
+                  style={[
+                    styles.modeButtonTitle,
+                    { color: selectedMode === 'quiz' ? '#FFFFFF' : theme.colors.text },
+                  ]}
+                >
                   Quiz Técnico
                 </Text>
-                <Text style={[styles.modeButtonDescription, { color: selectedMode === 'quiz' ? '#FFFFFF' : theme.colors.textSecondary }]}>
+                <Text
+                  style={[
+                    styles.modeButtonDescription,
+                    { color: selectedMode === 'quiz' ? '#FFFFFF' : theme.colors.textSecondary },
+                  ]}
+                >
                   Teste seus conhecimentos com perguntas de múltipla escolha
                 </Text>
               </View>
@@ -239,17 +265,14 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
             />
             <Text style={styles.cardTitle}>Descrição da Vaga</Text>
           </View>
-          
+
           <Text style={styles.description}>
             Cole o texto da descrição da vaga ou liste os principais requisitos e responsabilidades
             que você quer praticar.
           </Text>
-          
+
           <TextInput
-            style={[
-              styles.input,
-              error ? styles.inputError : null
-            ]}
+            style={[styles.input, error ? styles.inputError : null]}
             placeholder="Cole aqui a descrição da vaga..."
             placeholderTextColor={theme.colors.textSecondary}
             value={jobInfo}
@@ -261,25 +284,18 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
             numberOfLines={6}
             editable={!loading}
           />
-          
+
           {error ? (
             <View style={styles.errorContainer}>
-              <MaterialCommunityIcons
-                name="alert-circle"
-                size={20}
-                color={theme.colors.error}
-              />
+              <MaterialCommunityIcons name="alert-circle" size={20} color={theme.colors.error} />
               <Text style={styles.error}>{error}</Text>
             </View>
           ) : null}
-          
+
           {renderProcessingStep()}
-          
+
           <TouchableOpacity
-            style={[
-              styles.button,
-              loading ? styles.buttonDisabled : null,
-            ]}
+            style={[styles.button, loading ? styles.buttonDisabled : null]}
             onPress={handleStartProcess}
             disabled={loading}
           >
@@ -301,7 +317,7 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
               />
               <Text style={styles.cardTitle}>Dicas</Text>
             </View>
-            
+
             <View style={styles.tipsList}>
               <View style={styles.tipItem}>
                 <MaterialCommunityIcons
@@ -311,16 +327,12 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
                 />
                 <Text style={styles.tipText}>Cole o texto completo da descrição da vaga</Text>
               </View>
-              
+
               <View style={styles.tipItem}>
-                <MaterialCommunityIcons
-                  name="account-tie"
-                  size={20}
-                  color={theme.colors.primary}
-                />
+                <MaterialCommunityIcons name="account-tie" size={20} color={theme.colors.primary} />
                 <Text style={styles.tipText}>Inclua requisitos técnicos e comportamentais</Text>
               </View>
-              
+
               <View style={styles.tipItem}>
                 <MaterialCommunityIcons
                   name="star-outline"
@@ -329,13 +341,9 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
                 />
                 <Text style={styles.tipText}>Mencione o nível de experiência desejado</Text>
               </View>
-              
+
               <View style={styles.tipItem}>
-                <MaterialCommunityIcons
-                  name="code-tags"
-                  size={20}
-                  color={theme.colors.primary}
-                />
+                <MaterialCommunityIcons name="code-tags" size={20} color={theme.colors.primary} />
                 <Text style={styles.tipText}>Liste as principais tecnologias</Text>
               </View>
             </View>
@@ -351,7 +359,7 @@ const HomeScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
             >
               <Ionicons name="logo-linkedin" size={24} color={theme.colors.primary} />
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={styles.socialButton}
               onPress={() => Linking.openURL('https://github.com/pedrinholeda')}
@@ -535,4 +543,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen; 
+export default HomeScreen;

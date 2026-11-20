@@ -19,10 +19,6 @@ export const ApiKeyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [loading, setLoading] = useState(true);
   const [needsApiKey, setNeedsApiKey] = useState(false);
 
-  useEffect(() => {
-    loadStoredApiKey();
-  }, []);
-
   const loadStoredApiKey = async () => {
     try {
       setLoading(true);
@@ -104,6 +100,10 @@ export const ApiKeyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   };
 
+  useEffect(() => {
+    loadStoredApiKey();
+  }, []);
+
   return (
     <ApiKeyContext.Provider
       value={{
@@ -112,7 +112,7 @@ export const ApiKeyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         isKeyValid,
         validateKey,
         loading,
-        needsApiKey
+        needsApiKey,
       }}
     >
       {children}
@@ -126,4 +126,4 @@ export const useApiKey = () => {
     throw new Error('useApiKey must be used within an ApiKeyProvider');
   }
   return context;
-}; 
+};

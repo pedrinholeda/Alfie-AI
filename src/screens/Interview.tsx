@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  ScrollView,
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
@@ -29,10 +28,7 @@ interface InterviewScreenProps {
   };
 }
 
-const InterviewScreen: React.FC<InterviewScreenProps> = ({
-  navigation,
-  route,
-}) => {
+const InterviewScreen: React.FC<InterviewScreenProps> = ({ navigation, route }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answer, setAnswer] = useState('');
   const [feedback, setFeedback] = useState<any>(null);
@@ -58,7 +54,7 @@ const InterviewScreen: React.FC<InterviewScreenProps> = ({
       const feedback = await geminiService.analyzeFeedback(
         questions[currentQuestion].question,
         answer,
-        requirements
+        requirements,
       );
       setFeedback(feedback);
     } catch (error) {
@@ -106,14 +102,14 @@ const InterviewScreen: React.FC<InterviewScreenProps> = ({
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.progressContainer}>
-            <View 
+            <View
               style={[
-                styles.progressBar, 
-                { 
+                styles.progressBar,
+                {
                   width: `${((currentQuestion + 1) / questions.length) * 100}%`,
                   backgroundColor: getProgressColor(),
-                }
-              ]} 
+                },
+              ]}
             />
           </View>
           <Text style={styles.progressText}>
@@ -122,10 +118,7 @@ const InterviewScreen: React.FC<InterviewScreenProps> = ({
         </View>
 
         <View style={styles.avatarContainer}>
-          <AlfieAvatar
-            expression={getAlfieExpression()}
-            style={styles.avatar}
-          />
+          <AlfieAvatar expression={getAlfieExpression()} style={styles.avatar} />
         </View>
 
         <KeyboardAwareView style={styles.content}>
@@ -162,10 +155,19 @@ const InterviewScreen: React.FC<InterviewScreenProps> = ({
             <View style={styles.feedbackContainer}>
               <View style={styles.scoreContainer}>
                 <Text style={styles.scoreLabel}>Pontuação</Text>
-                <Text style={[
-                  styles.scoreValue,
-                  { color: feedback.score >= 7 ? theme.colors.success : feedback.score >= 5 ? theme.colors.warning : theme.colors.error }
-                ]}>
+                <Text
+                  style={[
+                    styles.scoreValue,
+                    {
+                      color:
+                        feedback.score >= 7
+                          ? theme.colors.success
+                          : feedback.score >= 5
+                            ? theme.colors.warning
+                            : theme.colors.error,
+                    },
+                  ]}
+                >
                   {feedback.score.toFixed(1)}
                 </Text>
               </View>
@@ -175,17 +177,23 @@ const InterviewScreen: React.FC<InterviewScreenProps> = ({
 
               <Text style={styles.feedbackTitle}>Pontos Fortes</Text>
               {feedback.strengths.map((strength: string, index: number) => (
-                <Text key={index} style={styles.bulletPoint}>• {strength}</Text>
+                <Text key={index} style={styles.bulletPoint}>
+                  • {strength}
+                </Text>
               ))}
 
               <Text style={styles.feedbackTitle}>Pontos a Melhorar</Text>
               {feedback.weaknesses.map((weakness: string, index: number) => (
-                <Text key={index} style={styles.bulletPoint}>• {weakness}</Text>
+                <Text key={index} style={styles.bulletPoint}>
+                  • {weakness}
+                </Text>
               ))}
 
               <Text style={styles.feedbackTitle}>Sugestões</Text>
               {feedback.suggestions.map((suggestion: string, index: number) => (
-                <Text key={index} style={styles.bulletPoint}>• {suggestion}</Text>
+                <Text key={index} style={styles.bulletPoint}>
+                  • {suggestion}
+                </Text>
               ))}
             </View>
           )}
@@ -344,4 +352,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InterviewScreen; 
+export default InterviewScreen;

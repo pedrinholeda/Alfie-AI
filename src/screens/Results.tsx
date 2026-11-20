@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { theme } from '../styles/theme';
 import SafeLayout from '../components/SafeLayout';
 import AlfieAvatar from '../components/AlfieAvatar';
@@ -23,21 +16,21 @@ interface ResultsScreenProps {
       total?: number;
       // Para resultados da Entrevista
       questions?: InterviewQuestion[];
-      answers?: Array<{
+      answers?: {
         question: string;
         answer: string;
         feedback: any;
-      }>;
+      }[];
       requirements?: JobRequirements;
     };
   };
 }
 
 const ResultsScreen: React.FC<ResultsScreenProps> = ({ navigation, route }) => {
-  const { score, total, questions, answers, requirements } = route.params;
+  const { score, total, questions, answers } = route.params;
 
   const isQuizResult = typeof score !== 'undefined' && typeof total !== 'undefined';
-  
+
   const calculateInterviewScore = () => {
     if (!answers) return 0;
     const totalScore = answers.reduce((acc, curr) => acc + (curr.feedback?.score || 0), 0);
@@ -52,7 +45,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ navigation, route }) => {
     const allSuggestions = new Set<string>();
     let overallFeedback = '';
 
-    answers.forEach(answer => {
+    answers.forEach((answer) => {
       if (answer.feedback) {
         answer.feedback.strengths.forEach((s: string) => allStrengths.add(s));
         answer.feedback.weaknesses.forEach((w: string) => allWeaknesses.add(w));
@@ -61,20 +54,34 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ navigation, route }) => {
     });
 
     // Análise técnica vs comportamental
-    const technicalAnswers = answers.filter(a => questions?.find(q => q.question === a.question)?.type === 'technical');
-    const behavioralAnswers = answers.filter(a => questions?.find(q => q.question === a.question)?.type === 'behavioral');
+    const technicalAnswers = answers.filter(
+      (a) => questions?.find((q) => q.question === a.question)?.type === 'technical',
+    );
+    const behavioralAnswers = answers.filter(
+      (a) => questions?.find((q) => q.question === a.question)?.type === 'behavioral',
+    );
 
-    const technicalScore = technicalAnswers.reduce((acc, curr) => acc + (curr.feedback?.score || 0), 0) / technicalAnswers.length;
-    const behavioralScore = behavioralAnswers.reduce((acc, curr) => acc + (curr.feedback?.score || 0), 0) / behavioralAnswers.length;
+    const technicalScore =
+      technicalAnswers.reduce((acc, curr) => acc + (curr.feedback?.score || 0), 0) /
+      technicalAnswers.length;
+    const behavioralScore =
+      behavioralAnswers.reduce((acc, curr) => acc + (curr.feedback?.score || 0), 0) /
+      behavioralAnswers.length;
 
     overallFeedback = `Seu desempenho foi ${technicalScore > behavioralScore ? 'melhor em questões técnicas' : 'melhor em questões comportamentais'}. `;
-    overallFeedback += technicalScore > 7 ? 'Você demonstrou excelente conhecimento técnico. ' : 
-                       technicalScore > 5 ? 'Seu conhecimento técnico está adequado, mas pode melhorar. ' :
-                       'Você precisa fortalecer seus conhecimentos técnicos. ';
-    
-    overallFeedback += behavioralScore > 7 ? 'Suas habilidades comportamentais são excelentes. ' :
-                       behavioralScore > 5 ? 'Suas habilidades comportamentais são boas, mas há espaço para desenvolvimento. ' :
-                       'Você precisa desenvolver melhor suas habilidades comportamentais. ';
+    overallFeedback +=
+      technicalScore > 7
+        ? 'Você demonstrou excelente conhecimento técnico. '
+        : technicalScore > 5
+          ? 'Seu conhecimento técnico está adequado, mas pode melhorar. '
+          : 'Você precisa fortalecer seus conhecimentos técnicos. ';
+
+    overallFeedback +=
+      behavioralScore > 7
+        ? 'Suas habilidades comportamentais são excelentes. '
+        : behavioralScore > 5
+          ? 'Suas habilidades comportamentais são boas, mas há espaço para desenvolvimento. '
+          : 'Você precisa desenvolver melhor suas habilidades comportamentais. ';
 
     return {
       strengths: Array.from(allStrengths),
@@ -101,16 +108,19 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ navigation, route }) => {
   const renderQuizResults = () => (
     <View style={styles.resultsContainer}>
       <Text style={styles.scoreTitle}>Resultado do Quiz</Text>
-      <Text style={[
-        styles.scoreValue,
-        { 
-          color: (score || 0) >= ((total || 0) * 0.7) 
-            ? theme.colors.success 
-            : (score || 0) >= ((total || 0) * 0.5) 
-              ? theme.colors.warning 
-              : theme.colors.error 
-        }
-      ]}>
+      <Text
+        style={[
+          styles.scoreValue,
+          {
+            color:
+              (score || 0) >= (total || 0) * 0.7
+                ? theme.colors.success
+                : (score || 0) >= (total || 0) * 0.5
+                  ? theme.colors.warning
+                  : theme.colors.error,
+          },
+        ]}
+      >
         {(((score || 0) / (total || 1)) * 100).toFixed(1)}%
       </Text>
       <Text style={styles.scoreSubtitle}>
@@ -129,19 +139,22 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ navigation, route }) => {
       <ScrollView style={styles.content}>
         <View style={styles.resultsContainer}>
           <Text style={styles.scoreTitle}>Resultado da Entrevista</Text>
-          
+
           <View style={styles.scoreContainer}>
             <Text style={styles.scoreLabel}>Pontuação Final</Text>
-            <Text style={[
-              styles.scoreValue,
-              { 
-                color: finalScore >= 7 
-                  ? theme.colors.success 
-                  : finalScore >= 5 
-                    ? theme.colors.warning 
-                    : theme.colors.error 
-              }
-            ]}>
+            <Text
+              style={[
+                styles.scoreValue,
+                {
+                  color:
+                    finalScore >= 7
+                      ? theme.colors.success
+                      : finalScore >= 5
+                        ? theme.colors.warning
+                        : theme.colors.error,
+                },
+              ]}
+            >
               {finalScore.toFixed(1)}
             </Text>
           </View>
@@ -154,14 +167,18 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ navigation, route }) => {
           <View style={styles.feedbackSection}>
             <Text style={styles.sectionTitle}>Pontos Fortes</Text>
             {feedback.strengths.map((strength, index) => (
-              <Text key={index} style={styles.bulletPoint}>• {strength}</Text>
+              <Text key={index} style={styles.bulletPoint}>
+                • {strength}
+              </Text>
             ))}
           </View>
 
           <View style={styles.feedbackSection}>
             <Text style={styles.sectionTitle}>Pontos a Desenvolver</Text>
             {feedback.weaknesses.map((weakness, index) => (
-              <Text key={index} style={styles.bulletPoint}>• {weakness}</Text>
+              <Text key={index} style={styles.bulletPoint}>
+                • {weakness}
+              </Text>
             ))}
           </View>
 
@@ -195,18 +212,12 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ navigation, route }) => {
     <SafeLayout>
       <View style={styles.container}>
         <View style={styles.avatarContainer}>
-          <AlfieAvatar
-            expression={getAlfieExpression()}
-            style={styles.avatar}
-          />
+          <AlfieAvatar expression={getAlfieExpression()} style={styles.avatar} />
         </View>
 
         {isQuizResult ? renderQuizResults() : renderInterviewResults()}
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.replace('Home')}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => navigation.replace('Home')}>
           <Text style={styles.buttonText}>Voltar ao Início</Text>
         </TouchableOpacity>
       </View>
@@ -345,4 +356,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ResultsScreen; 
+export default ResultsScreen;

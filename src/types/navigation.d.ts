@@ -1,18 +1,28 @@
-import { JobRequirements, InterviewQuestion } from '../services/gemini';
+import type {
+  InterviewFeedback,
+  InterviewQuestion,
+  JobRequirements,
+  QuizQuestion,
+} from '../services/gemini';
 
 export type RootStackParamList = {
+  Introduction: undefined;
   Onboarding: undefined;
   Home: undefined;
   Interview: {
     requirements: JobRequirements;
     questions: InterviewQuestion[];
   };
-  Results: {
-    finalAnalysis: {
-      analysis: string;
-      finalScore: number;
-      strengths: string[];
-      improvements: string[];
-    };
+  Quiz: {
+    requirements: JobRequirements;
+    questions: QuizQuestion[];
   };
-}; 
+  Results: {
+    score?: number;
+    total?: number;
+    questions?: InterviewQuestion[];
+    answers?: { question: string; answer: string; feedback: InterviewFeedback | null }[];
+    requirements?: JobRequirements;
+  };
+  History: undefined;
+};

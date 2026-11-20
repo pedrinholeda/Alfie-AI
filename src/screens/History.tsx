@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList,
-  Alert,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Alert } from 'react-native';
 import { theme } from '../styles/theme';
 import SafeLayout from '../components/SafeLayout';
 import Header from '../components/Header';
@@ -56,14 +49,9 @@ const History: React.FC<{ navigation: any }> = ({ navigation }) => {
     });
 
     return (
-      <TouchableOpacity
-        style={styles.card}
-        onPress={() => handleViewFeedback(item)}
-      >
+      <TouchableOpacity style={styles.card} onPress={() => handleViewFeedback(item)}>
         <View style={styles.cardHeader}>
-          <Text style={styles.cardTitle}>
-            {item.type === 'quiz' ? 'Quiz' : 'Entrevista'}
-          </Text>
+          <Text style={styles.cardTitle}>{item.type === 'quiz' ? 'Quiz' : 'Entrevista'}</Text>
           <Text
             style={[
               styles.score,
@@ -72,8 +60,8 @@ const History: React.FC<{ navigation: any }> = ({ navigation }) => {
                   item.score >= 7
                     ? theme.colors.success
                     : item.score >= 5
-                    ? theme.colors.warning
-                    : theme.colors.error,
+                      ? theme.colors.warning
+                      : theme.colors.error,
               },
             ]}
           >
@@ -90,9 +78,7 @@ const History: React.FC<{ navigation: any }> = ({ navigation }) => {
             {item.score} de {item.totalQuestions} questões corretas
           </Text>
         ) : (
-          <Text style={styles.details}>
-            {item.answers?.length || 0} perguntas respondidas
-          </Text>
+          <Text style={styles.details}>{item.answers?.length || 0} perguntas respondidas</Text>
         )}
       </TouchableOpacity>
     );
@@ -119,14 +105,12 @@ const History: React.FC<{ navigation: any }> = ({ navigation }) => {
         <FlatList
           data={history}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           contentContainerStyle={styles.list}
         />
       ) : (
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>
-            Você ainda não tem nenhum feedback salvo.
-          </Text>
+          <Text style={styles.emptyText}>Você ainda não tem nenhum feedback salvo.</Text>
           <Text style={styles.emptySubtext}>
             Complete um quiz ou uma entrevista para começar seu histórico.
           </Text>
@@ -195,4 +179,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default History; 
+export default History;

@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Platform,
-  StatusBar,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../styles/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -18,12 +11,7 @@ interface HeaderProps {
   rightComponent?: React.ReactNode;
 }
 
-const Header: React.FC<HeaderProps> = ({
-  title,
-  showBack = true,
-  onBack,
-  rightComponent,
-}) => {
+const Header: React.FC<HeaderProps> = ({ title, showBack = true, onBack, rightComponent }) => {
   const insets = useSafeAreaInsets();
 
   return (
@@ -44,27 +32,13 @@ const Header: React.FC<HeaderProps> = ({
             onPress={onBack}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Ionicons
-              name="chevron-back"
-              size={24}
-              color={theme.colors.text}
-            />
+            <Ionicons name="chevron-back" size={24} color={theme.colors.text} />
           </TouchableOpacity>
         )}
-        <Text
-          style={[
-            styles.title,
-            { marginLeft: showBack ? 10 : 0 },
-          ]}
-          numberOfLines={1}
-        >
+        <Text style={[styles.title, { marginLeft: showBack ? 10 : 0 }]} numberOfLines={1}>
           {title}
         </Text>
-        {rightComponent && (
-          <View style={styles.rightComponent}>
-            {rightComponent}
-          </View>
-        )}
+        {rightComponent && <View style={styles.rightComponent}>{rightComponent}</View>}
       </View>
     </View>
   );
@@ -96,4 +70,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Header; 
+export default Header;

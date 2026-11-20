@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  View,
-  StyleSheet,
-  Platform,
-  StatusBar,
-  ViewStyle,
-} from 'react-native';
+import { SafeAreaView, View, StyleSheet, Platform, StatusBar, ViewStyle } from 'react-native';
 import { theme } from '../styles/theme';
 
 interface SafeLayoutProps {
@@ -15,21 +8,11 @@ interface SafeLayoutProps {
   contentStyle?: ViewStyle;
 }
 
-const SafeLayout: React.FC<SafeLayoutProps> = ({
-  children,
-  style,
-  contentStyle,
-}) => {
+const SafeLayout: React.FC<SafeLayoutProps> = ({ children, style, contentStyle }) => {
   return (
     <SafeAreaView style={[styles.container, style]}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor={theme.colors.background}
-        translucent
-      />
-      <View style={[styles.content, contentStyle]}>
-        {children}
-      </View>
+      <StatusBar barStyle="light-content" backgroundColor={theme.colors.background} translucent />
+      <View style={[styles.content, contentStyle]}>{children}</View>
     </SafeAreaView>
   );
 };
@@ -45,4 +28,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SafeLayout; 
+export default SafeLayout;

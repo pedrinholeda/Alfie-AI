@@ -1,0 +1,7 @@
+node_modules
+dist
+web-build
+.expo
+coverage
+package-lock.json
+CHANGELOG.md

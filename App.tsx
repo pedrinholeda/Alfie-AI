@@ -12,18 +12,16 @@ import QuizScreen from './src/screens/Quiz';
 import ResultsScreen from './src/screens/Results';
 import HistoryScreen from './src/screens/History';
 import { theme } from './src/styles/theme';
+import type { RootStackParamList } from './src/types/navigation';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
     <ApiKeyProvider>
       <FeedbackHistoryProvider>
         <NavigationContainer>
-          <StatusBar
-            barStyle="light-content"
-            backgroundColor={theme.colors.background}
-          />
+          <StatusBar barStyle="light-content" backgroundColor={theme.colors.background} />
           <Stack.Navigator
             screenOptions={{
               headerShown: false,
