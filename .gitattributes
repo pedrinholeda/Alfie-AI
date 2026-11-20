@@ -1,0 +1,15 @@
+# Fim de linha LF no repositório, em qualquer sistema. Sem isto, no Windows, todo commit
+# avisa sobre conversão LF/CRLF e diffs mostram arquivos inteiros mudando.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.mp4 binary
+*.pdf binary
+*.woff2 binary
+*.PNG binary
+*.jpeg binary
+*.ttf binary
