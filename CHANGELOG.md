@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/pedrinholeda/Alfie-AI/compare/v1.1.0...v1.1.1) (2026-11-20)
+
+
+### Documentação
+
+* AGENTS.md explica por que app.json fica fora do Prettier ([c066fd7](https://github.com/pedrinholeda/Alfie-AI/commit/c066fd7ba6bbb2882188ec80eb32186f264ef8c2))
+
 ## [1.1.0](https://github.com/pedrinholeda/Alfie-AI/compare/v1.0.0...v1.1.0) (2026-11-20)
 
 
